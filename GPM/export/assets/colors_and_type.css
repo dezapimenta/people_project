@@ -1,0 +1,240 @@
+/* =========================================================
+   Neon Design System — Colors & Type tokens
+   Source of truth for all design artifacts.
+   Brand palette verified against the official PPTX template.
+   ========================================================= */
+
+/* ---------- Fonts ----------
+   PRIMARY: "Palo" (proprietary, not yet available to the agent).
+   INTERIM: "DM Sans" — used while Palo is unavailable, per brand direction.
+   Use Regular (400) for body / long text. Use SemiBold (600) for titles,
+   labels, and destaques. Bold (700) reserved for heavy emphasis. */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,600&display=swap');
+
+:root {
+  /* =========================================================
+     COLOR — Brand Palette (official)
+     ========================================================= */
+  --neon-azul-neon:    #008fff;   /* Primary brand blue */
+  --neon-turquesa:     #00fff2;   /* Fluorescent cyan accent */
+  --neon-cobalto:      #0000d3;   /* Deep cobalt */
+  --neon-marinho:      #171e3d;   /* Navy — default dark background */
+  --neon-limao:        #b4ff3c;   /* Lime green — high-contrast accent */
+  --neon-chumbo:       #31475e;   /* Slate gray — secondary dark */
+  --neon-branco:       #ffffff;
+  --neon-preto:        #000000;
+
+  /* Tonal scale — derived (oklch) for subtle UI surfaces.
+     Use only when brand colors are too strong for the context. */
+  --neon-azul-50:   #e6f4ff;
+  --neon-azul-100:  #cce9ff;
+  --neon-azul-200:  #99d2ff;
+  --neon-azul-300:  #66bcff;
+  --neon-azul-400:  #33a5ff;
+  --neon-azul-500:  #008fff;   /* = azul-neon */
+  --neon-azul-600:  #0072cc;
+  --neon-azul-700:  #005699;
+  --neon-azul-800:  #003966;
+  --neon-azul-900:  #001d33;
+
+  --neon-gray-50:   #f5f7fa;
+  --neon-gray-100:  #eaeef3;
+  --neon-gray-200:  #d3dae4;
+  --neon-gray-300:  #aab6c6;
+  --neon-gray-400:  #7a8aa1;
+  --neon-gray-500:  #546579;   /* between chumbo and marinho */
+  --neon-gray-600:  #31475e;   /* = chumbo */
+  --neon-gray-700:  #233349;
+  --neon-gray-800:  --neon-marinho;
+  --neon-gray-900:  #0b1126;
+
+  /* =========================================================
+     COLOR — Semantic
+     ========================================================= */
+  /* Surfaces */
+  --bg:             var(--neon-branco);
+  --bg-subtle:      var(--neon-gray-50);
+  --bg-inverse:     var(--neon-marinho);
+  --bg-brand:       var(--neon-azul-neon);
+  --bg-brand-deep:  var(--neon-cobalto);
+
+  /* Foreground */
+  --fg1:            var(--neon-marinho);     /* primary text on light */
+  --fg2:            var(--neon-chumbo);      /* secondary text on light */
+  --fg3:            var(--neon-gray-400);    /* tertiary / meta */
+  --fg-on-brand:    var(--neon-branco);      /* text on azul-neon / cobalto */
+  --fg-on-dark:     var(--neon-branco);      /* text on marinho */
+  --fg-on-accent:   var(--neon-marinho);     /* text on turquesa / limão */
+  --fg-link:        var(--neon-azul-neon);
+  --fg-link-hover:  var(--neon-cobalto);
+
+  /* Borders & dividers */
+  --border:         var(--neon-gray-100);
+  --border-strong:  var(--neon-gray-200);
+  --border-brand:   var(--neon-azul-neon);
+
+  /* Feedback */
+  --success:        var(--neon-limao);
+  --success-fg:     var(--neon-marinho);
+  --warning:        #ffb300;
+  --danger:         #ff3b5c;
+  --info:           var(--neon-azul-neon);
+
+  /* Gradients — the signature Neon mark */
+  --grad-brand:        linear-gradient(90deg, var(--neon-azul-neon) 0%, var(--neon-turquesa) 100%);
+  --grad-brand-deep:   linear-gradient(90deg, var(--neon-cobalto) 0%, var(--neon-azul-neon) 55%, var(--neon-turquesa) 100%);
+  --grad-brand-diag:   linear-gradient(135deg, var(--neon-azul-neon) 0%, var(--neon-turquesa) 100%);
+
+  /* =========================================================
+     TYPE — Foundations
+     ========================================================= */
+  --font-primary:   'Palo', 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-interim:   'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:      'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --fw-regular:   400;
+  --fw-medium:    500;
+  --fw-semibold:  600;   /* titles, labels, destaques */
+  --fw-bold:      700;
+
+  /* Type scale — DM Sans tuned (slight tightening for display) */
+  --fs-display:  72px;
+  --fs-h1:       56px;
+  --fs-h2:       40px;
+  --fs-h3:       28px;
+  --fs-h4:       22px;
+  --fs-body-lg:  18px;
+  --fs-body:     16px;
+  --fs-body-sm:  14px;
+  --fs-caption:  12px;
+
+  --lh-tight:    1.05;
+  --lh-snug:     1.2;
+  --lh-normal:   1.45;
+  --lh-relaxed:  1.6;
+
+  --lsp-tight:   -0.02em;
+  --lsp-normal:  0;
+  --lsp-wide:    0.08em;
+
+  /* =========================================================
+     SPACING & SHAPE
+     ========================================================= */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  24px;
+  --space-6:  32px;
+  --space-7:  48px;
+  --space-8:  64px;
+  --space-9:  96px;
+
+  /* Radii — Neon favors rounded corners. Pill for CTAs & chips. */
+  --r-sm:    6px;
+  --r-md:    12px;
+  --r-lg:    20px;
+  --r-xl:    28px;
+  --r-2xl:   40px;
+  --r-pill:  999px;
+
+  /* Shadows — light, soft. Mostly used on cards over photography. */
+  --shadow-xs: 0 1px 2px rgba(23, 30, 61, 0.06);
+  --shadow-sm: 0 2px 6px rgba(23, 30, 61, 0.08);
+  --shadow-md: 0 6px 20px rgba(23, 30, 61, 0.10);
+  --shadow-lg: 0 16px 40px rgba(23, 30, 61, 0.14);
+  --shadow-brand: 0 12px 32px rgba(0, 143, 255, 0.28);
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:   140ms;
+  --dur-base:   220ms;
+  --dur-slow:   360ms;
+}
+
+/* =========================================================
+   SEMANTIC TEXT STYLES — use as classes or @extend patterns
+   ========================================================= */
+.t-display,
+h1.display {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--lsp-tight);
+  color: var(--fg1);
+}
+.t-h1, h1 {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--lsp-tight);
+  color: var(--fg1);
+}
+.t-h2, h2 {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--lsp-tight);
+  color: var(--fg1);
+}
+.t-h3, h3 {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-snug);
+  color: var(--fg1);
+}
+.t-h4, h4 {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-snug);
+  color: var(--fg1);
+}
+.t-body-lg {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--fg1);
+}
+.t-body, p, body {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+  color: var(--fg1);
+}
+.t-body-sm {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg2);
+}
+.t-caption {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-normal);
+  color: var(--fg3);
+}
+.t-eyebrow {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-caption);
+  letter-spacing: var(--lsp-wide);
+  text-transform: uppercase;
+  color: var(--neon-azul-neon);
+}
+.t-tag {
+  font-family: var(--font-primary);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-body-sm);
+  color: var(--neon-azul-neon);
+}
