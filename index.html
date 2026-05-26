@@ -617,7 +617,6 @@ body {
       <div class="sidebar-item active" data-tab="projetos"><span class="sidebar-icon">▦</span> Dashboard</div>
       <div class="sidebar-item" data-tab="timeline"><span class="sidebar-icon">⊟</span> Timeline</div>
       <div class="sidebar-item" data-tab="backlog"><span class="sidebar-icon">≡</span> Backlog</div>
-      <div class="sidebar-item" data-tab="relatorios"><span class="sidebar-icon">◉</span> Relatórios</div>
     </div>
 
     <div class="sidebar-section">
@@ -647,6 +646,11 @@ body {
       <!-- DASHBOARD -->
       <div id="tab-projetos" class="tab-content">
         <div class="stats" id="stats-container"></div>
+
+        <div style="margin-bottom: var(--space-6);">
+          <div style="font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 8px;">Relatórios</div>
+          <div id="reports-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4);"></div>
+        </div>
 
         <div class="filters">
           <div class="filter-group">
@@ -697,10 +701,7 @@ body {
         <div class="backlog-list" id="backlog-list"></div>
       </div>
 
-      <!-- RELATÓRIOS -->
-      <div id="tab-relatorios" class="tab-content" style="display: none;">
-        <div id="reports-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);"></div>
-      </div>
+      <!-- RELATÓRIOS removido — integrado ao Dashboard -->
     </div>
   </div>
 </div>
@@ -753,30 +754,30 @@ const TEAM = {
 
 // Stakeholders sem foto (Co-Owners e HRBPs externos ao Core team)
 const EXTRAS = {
-  mh:  { id:'mh',  name:'Matheus Rocha',         initials:'MR', color:'#5fa8ff' },
-  ak:  { id:'ak',  name:'Amanda Komuta',         initials:'AK', color:'#ff5fa0' },
-  apc: { id:'apc', name:'Amanda Pimentel',       initials:'AP', color:'#ffa94d' },
+  mh:  { id:'mh',  name:'Matheus Rocha',         initials:'MR', color:'#5fa8ff', photo:'assets/team/matheus_rocha.png' },
+  ak:  { id:'ak',  name:'Amanda Komuta',         initials:'AK', color:'#ff5fa0', photo:'assets/team/amanda_komuta.png' },
+  apc: { id:'apc', name:'Amanda Pimentel',       initials:'AP', color:'#ffa94d', photo:'assets/team/amanda_pimentel.png' },
   alo: { id:'alo', name:'Andressa Lopes',        initials:'AL', color:'#c8a4ff' },
-  pja: { id:'pja', name:'Paula Jannini',         initials:'PJ', color:'#ff5fa0' },
-  cpc: { id:'cpc', name:'Camila Pereira',        initials:'CP', color:'#5fffb0' },
-  gz:  { id:'gz',  name:'Gustavo Zaluski',       initials:'GZ', color:'#b4ff3c' },
+  pja: { id:'pja', name:'Paula Jannini',         initials:'PJ', color:'#ff5fa0', photo:'assets/team/paula_jannini.png' },
+  cpc: { id:'cpc', name:'Camila Pereira',        initials:'CP', color:'#5fffb0', photo:'assets/team/camila_pereira.png' },
+  gz:  { id:'gz',  name:'Gustavo Zaluski',       initials:'GZ', color:'#b4ff3c', photo:'assets/team/gustavo_zaluski.png' },
   cea: { id:'cea', name:'Camila Erika',          initials:'CE', color:'#00f0d4' },
-  lm:  { id:'lm',  name:'Ligia Mayumi',          initials:'LM', color:'#c8a4ff' },
-  gg:  { id:'gg',  name:'Gabriela Gonçales',    initials:'GG', color:'#ffa94d' },
+  lm:  { id:'lm',  name:'Ligia Mayumi',          initials:'LM', color:'#c8a4ff', photo:'assets/team/ligia_mayumi.png' },
+  gg:  { id:'gg',  name:'Gabriela Gonçales',    initials:'GG', color:'#ffa94d', photo:'assets/team/gabriela_goncales.png' },
 };
 
 let PROJECTS = [
   { id:'p1', name:'Abertura de Vagas', sub:'Otimização via Slack com foco em redução de carga operacional', icon:'📋', iface:'assets/interfaces/slack.png', status:'progress', progress: 60, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.mh, due: '24 jul', startStr: '12 jun', endStr: '24 jul', start: 2.4, end: 3.8, category:'Go-to-Market: New Wave 1' },
   { id:'p2', name:'POC: Hunting Assistant LinkedIn', sub:'Sourcing automatizado via IA — 4h economizadas por função', icon:'🎯', iface:'assets/interfaces/linkedin.png', status:'discovery', progress: 35, owner: TEAM.nh, coOwner: TEAM.ap, hrbp: null, due: '22 mai', startStr: '10 abr', endStr: '22 mai', start: 0.33, end: 1.73, category:'Teste internos' },
   { id:'p3', name:'Farol de Vagas', sub:'Dashboard automatizado de insights e status de vagas via Slack', icon:'🛰️', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 20, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.gz, due: '26 ago', startStr: '15 jul', endStr: '26 ago', start: 3.5, end: 4.87, category:'Desenvolvimento' },
-  { id:'p4', name:'Parecer de Entrevista', sub:'IA para guiar gestores com sugestões e score de desempenho', icon:'📝', iface:'assets/interfaces/slack.png', status:'progress', progress: 72, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '24 jul', startStr: '12 jun', endStr: '24 jul', start: 2.4, end: 3.8, category:'Go-to-Market: New Wave 1' },
+  { id:'p4', name:'Parecer de Entrevista', sub:'IA para guiar gestores com sugestões e score de desempenho', icon:'📝', iface:'assets/interfaces/slack.png', status:'progress', progress: 72, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '19 ago', startStr: '12 jun', endStr: '19 ago', start: 2.4, end: 4.63, category:'Go-to-Market: New Wave 1' },
   { id:'p5', name:'POC: Entrevistas com IA', sub:'Análise automática de candidatos com score de aderência', icon:'🤖', iface:'assets/interfaces/lever.png', status:'progress', progress: 65, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '10 jul', startStr: '29 mai', endStr: '10 jul', start: 1.97, end: 3.33, category:'Teste internos' },
   { id:'p6', name:'Automação de Agendas', sub:'Agendamento inteligente eliminando conflitos horários', icon:'📅', iface:'assets/interfaces/google_calendar.png', status:'progress', progress: 58, owner: TEAM.fn, coOwner: EXTRAS.ak, hrbp: EXTRAS.apc, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Go-to-Market: New Wave 1' },
   { id:'p7', name:'Simulação de Offer', sub:'Gerador inteligente de propostas com automação de governança', icon:'💰', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 28, owner: TEAM.sm, coOwner: EXTRAS.alo, hrbp: EXTRAS.mh, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Desenvolvimento' },
-  { id:'p8', name:'Movimentações', sub:'Módulo de estrutura e organograma com automação segura', icon:'🔁', iface:'assets/interfaces/people_platform.png', status:'discovery', progress: 42, owner: TEAM.cj, coOwner: EXTRAS.pja, hrbp: EXTRAS.cpc, due: '22 mai', startStr: '10 abr', endStr: '22 mai', start: 0.33, end: 1.73, category:'Go-to-Market: New Wave 2' },
+  { id:'p8', name:'Movimentações', sub:'Módulo de estrutura e organograma com automação segura', icon:'🔁', iface:'assets/interfaces/people_platform.png', status:'discovery', progress: 42, owner: TEAM.cj, coOwner: EXTRAS.pja, hrbp: EXTRAS.cpc, due: '17 jul', startStr: '05 jun', endStr: '17 jul', start: 2.17, end: 3.57, category:'Go-to-Market: New Wave 2' },
   { id:'p9', name:'People Agent', sub:'Assistente IA para dados de People, Budget e FAQ', icon:'✨', iface:'assets/interfaces/people_platform.png', status:'progress', progress: 55, owner: TEAM.tl, coOwner: TEAM.ap, hrbp: EXTRAS.gz, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Go-to-Market: New Wave 1' },
   { id:'p10', name:'Dashboard Líder (New DDL)', sub:'Storytelling de dados com frequência diária em tempo real', icon:'📊', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 38, owner: TEAM.sm, coOwner: TEAM.tl, hrbp: null, due: '27 jul', startStr: '15 jun', endStr: '27 jul', start: 2.5, end: 3.9, category:'Desenvolvimento' },
-  { id:'p11', name:'Implantação Teamguide', sub:'Centralização de treinamento, carreira, performance e skills', icon:'🚀', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 25, owner: TEAM.rn, coOwner: EXTRAS.gg, hrbp: EXTRAS.lm, due: '31 jul', startStr: '19 jun', endStr: '31 jul', start: 2.63, end: 3.97, category:'Desenvolvimento' },
+  { id:'p11', name:'Implantação Teamguide', sub:'Centralização de treinamento, carreira, performance e skills', icon:'🚀', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 25, owner: TEAM.rn, coOwner: EXTRAS.gg, hrbp: EXTRAS.lm, due: '12 set', startStr: '01 ago', endStr: '12 set', start: 4.03, end: 5.4, category:'Desenvolvimento' },
 ];
 
 const STATUS_LABEL = { progress: 'Em andamento', discovery: 'Discovery', planning: 'Planejamento' };
@@ -1128,8 +1129,8 @@ function exportCSV() {
 document.querySelectorAll('.sidebar-item').forEach(item => {
   item.addEventListener('click', () => {
     const tabName = item.dataset.tab;
-    const tabMap = { projetos: 'tab-projetos', timeline: 'tab-timeline', backlog: 'tab-backlog', relatorios: 'tab-relatorios' };
-    const titleMap = { projetos: 'Dashboard', timeline: 'Timeline', backlog: 'Backlog', relatorios: 'Relatórios' };
+    const tabMap = { projetos: 'tab-projetos', timeline: 'tab-timeline', backlog: 'tab-backlog' };
+    const titleMap = { projetos: 'Dashboard', timeline: 'Timeline', backlog: 'Backlog' };
     document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
     document.getElementById(tabMap[tabName]).style.display = 'block';
