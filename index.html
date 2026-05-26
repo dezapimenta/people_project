@@ -740,6 +740,19 @@ body {
   </div>
 </div>
 
+<!-- INTERFACE VIEWER MODAL -->
+<div class="modal" id="interface-modal">
+  <div style="position: relative; width: 90vw; height: 90vh; background: var(--bg-deep); border: 1px solid var(--card-border); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--card-border); background: rgba(10, 17, 41, 0.6);">
+      <h2 id="interface-title" style="margin: 0; font-size: 16px; color: var(--ink-1); font-weight: 700;"></h2>
+      <button class="modal-close" onclick="closeInterfaceModal()">✕</button>
+    </div>
+    <div style="flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; background: rgba(6, 13, 36, 0.6);">
+      <img id="interface-image" src="" alt="Interface" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
+    </div>
+  </div>
+</div>
+
 <script>
 const TEAM = {
   fn: { id:'fn', name:'Fernanda Nobre',      initials:'FN', color:'#4ba3ff', photo:'assets/team/fernanda_nobre.png' },
@@ -842,6 +855,7 @@ function renderProjects(filtered = PROJECTS) {
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-4);">
         <div style="font-size: 12px; color: var(--ink-3);"><strong style="color: var(--ink-2);">${p.owner.name}</strong> · responsável</div>
         <div class="project-actions">
+          <button class="action-btn" onclick="viewInterface('${p.id}')" title="Ver interface">🖼️</button>
           <button class="action-btn" onclick="openEditModal('${p.id}')" title="Editar">✎</button>
           <button class="action-btn" onclick="deleteProject('${p.id}')" title="Deletar">🗑</button>
         </div>
@@ -1055,6 +1069,21 @@ function openEditModal(id) {
 function closeModal() {
   document.getElementById('project-modal').classList.remove('active');
   editingId = null;
+}
+
+function viewInterface(id) {
+  const project = PROJECTS.find(p => p.id === id);
+  if (!project || !project.iface) {
+    alert('Interface não disponível para este projeto');
+    return;
+  }
+  document.getElementById('interface-title').textContent = project.name;
+  document.getElementById('interface-image').src = project.iface;
+  document.getElementById('interface-modal').classList.add('active');
+}
+
+function closeInterfaceModal() {
+  document.getElementById('interface-modal').classList.remove('active');
 }
 
 function deleteProject(id) {
