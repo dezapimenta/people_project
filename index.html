@@ -551,10 +551,10 @@ body {
 }
 
 .backlog-row {
-  display: grid;
-  grid-template-columns: 1fr 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: var(--space-4);
-  align-items: center;
   padding: var(--space-4) var(--space-6);
   border-bottom: 1px solid var(--card-border);
   transition: background 0.2s ease;
@@ -580,6 +580,20 @@ body {
 .priority-high { background: rgba(255, 95, 160, 0.12); color: var(--neon-pink); border-color: rgba(255, 95, 160, 0.3); }
 .priority-medium { background: rgba(255, 169, 77, 0.12); color: var(--neon-orange); border-color: rgba(255, 169, 77, 0.3); }
 .priority-low { background: rgba(140, 160, 200, 0.12); color: var(--ink-3); border-color: rgba(140, 160, 200, 0.3); }
+
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.status-todo { background: rgba(140, 160, 200, 0.12); color: var(--ink-3); border-color: rgba(140, 160, 200, 0.3); }
+.status-in-progress { background: rgba(255, 169, 77, 0.12); color: var(--neon-orange); border-color: rgba(255, 169, 77, 0.3); }
+.status-done { background: rgba(75, 163, 255, 0.12); color: var(--neon-blue); border-color: rgba(75, 163, 255, 0.3); }
 
 /* ===== TIMELINE ===== */
 .timeline-container {
@@ -698,6 +712,12 @@ body {
 
       <!-- BACKLOG -->
       <div id="tab-backlog" class="tab-content" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+          <h2 style="margin: 0; font-size: 16px; color: var(--ink-1); font-weight: 700;">Backlog Items</h2>
+          <button class="btn btn-primary" onclick="openNewBacklogModal()" style="gap: 6px;">
+            <span>➕</span> Novo Item
+          </button>
+        </div>
         <div class="backlog-list" id="backlog-list"></div>
       </div>
 
@@ -753,6 +773,79 @@ body {
   </div>
 </div>
 
+<!-- BACKLOG ITEM MODAL -->
+<div class="modal" id="backlog-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeBacklogModal()">✕</button>
+    <div class="modal-header" id="backlog-modal-title">Novo Item do Backlog</div>
+    <form id="backlog-form">
+      <div class="form-group">
+        <label>Nome da Tarefa</label>
+        <input type="text" id="backlog-name" placeholder="Ex: Integração Greenhouse → Farol" required>
+      </div>
+      <div class="form-group">
+        <label>Projeto Relacionado</label>
+        <select id="backlog-project" required>
+          <option value="">Selecione um projeto</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="backlog-desc" placeholder="Descrição da tarefa (opcional)"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Prioridade</label>
+        <select id="backlog-priority" required>
+          <option value="low">Baixa</option>
+          <option value="medium" selected>Média</option>
+          <option value="high">Alta</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="backlog-status" required>
+          <option value="todo">A Fazer</option>
+          <option value="in-progress">Em Progresso</option>
+          <option value="done">Concluído</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeBacklogModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Adicionar Item</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- TIMELINE EDIT MODAL -->
+<div class="modal" id="timeline-edit-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeTimelineEditModal()">✕</button>
+    <div class="modal-header" id="timeline-edit-title">Editar Cronograma</div>
+    <form id="timeline-edit-form">
+      <div style="background: rgba(75, 163, 255, 0.06); border: 1px solid rgba(75, 163, 255, 0.2); border-radius: var(--r-md); padding: var(--space-6); margin-bottom: var(--space-6);">
+        <div id="timeline-project-info" style="color: var(--ink-2); font-weight: 500; margin-bottom: var(--space-4);"></div>
+      </div>
+      <div class="form-group">
+        <label>Data de Início (ex: 12 jun)</label>
+        <input type="text" id="timeline-start" placeholder="ex: 12 jun" required>
+      </div>
+      <div class="form-group">
+        <label>Data de Término (ex: 24 jul)</label>
+        <input type="text" id="timeline-end" placeholder="ex: 24 jul" required>
+      </div>
+      <div class="form-group">
+        <label>Progresso (%)</label>
+        <input type="number" id="timeline-progress" min="0" max="100" value="0" required>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeTimelineEditModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Salvar Mudanças</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script>
 const TEAM = {
   fn: { id:'fn', name:'Fernanda Nobre',      initials:'FN', color:'#4ba3ff', photo:'assets/team/fernanda_nobre.png' },
@@ -791,6 +884,15 @@ let PROJECTS = [
   { id:'p9', name:'People Agent', sub:'Assistente IA para dados de People, Budget e FAQ', icon:'✨', iface:'assets/interfaces/people_platform.png', status:'progress', progress: 55, owner: TEAM.tl, coOwner: TEAM.ap, hrbp: EXTRAS.gz, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Go-to-Market: New Wave 1' },
   { id:'p10', name:'Dashboard Líder (New DDL)', sub:'Storytelling de dados com frequência diária em tempo real', icon:'📊', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 38, owner: TEAM.sm, coOwner: TEAM.tl, hrbp: null, due: '27 jul', startStr: '15 jun', endStr: '27 jul', start: 2.5, end: 3.9, category:'Desenvolvimento' },
   { id:'p11', name:'Implantação Teamguide', sub:'Centralização de treinamento, carreira, performance e skills', icon:'🚀', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 25, owner: TEAM.rn, coOwner: EXTRAS.gg, hrbp: EXTRAS.lm, due: '12 set', startStr: '01 ago', endStr: '12 set', start: 4.03, end: 5.4, category:'Desenvolvimento' },
+];
+
+let BACKLOG = [
+  { id:'b1', name:'Integração Greenhouse → Farol', project:'Farol de Vagas', priority:'high', status:'todo', description:'' },
+  { id:'b2', name:'Pesquisa com candidatos', project:'Parecer de Entrevista', priority:'medium', status:'todo', description:'' },
+  { id:'b3', name:'Especificar API de calendário', project:'Automação de Agendas', priority:'high', status:'todo', description:'' },
+  { id:'b4', name:'Treinar modelo de scoring', project:'POC: Entrevistas com IA', priority:'medium', status:'todo', description:'' },
+  { id:'b5', name:'Onboarding Teamguide · piloto', project:'Implantação Teamguide', priority:'low', status:'todo', description:'' },
+  { id:'b6', name:'Validação de erros de empresa', project:'Movimentações', priority:'high', status:'todo', description:'' },
 ];
 
 const STATUS_LABEL = { progress: 'Em andamento', discovery: 'Discovery', planning: 'Planejamento' };
@@ -833,6 +935,9 @@ function renderProjects(filtered = PROJECTS) {
       <div class="project-header">
         <div class="project-icon">${p.icon}</div>
         <div class="project-status ${p.status}">${STATUS_LABEL[p.status]}</div>
+      </div>
+      <div style="margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: center; height: 60px; background: rgba(75, 163, 255, 0.06); border-radius: var(--r-md);">
+        <img src="${p.iface}" alt="${p.name}" style="max-width: 90%; max-height: 90%; object-fit: contain;" />
       </div>
       <h3 class="project-title">${p.name}</h3>
       <p class="project-subtitle">${p.sub}</p>
@@ -964,7 +1069,7 @@ function renderTimeline(filtered = PROJECTS) {
           <span>${p.name}</span>
         </div>
         <div style="position: relative; width: ${TIMELINE_WIDTH}px; height: 30px;">
-          <div style="position: absolute; left: ${left}px; width: ${width}px; height: 22px; top: 0; background: ${catColor}; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 3px; color: ${textColor}; font-size: 9px; font-weight: 700; box-shadow: 0 1px 5px ${catColor}50; overflow: hidden;">
+          <div style="position: absolute; left: ${left}px; width: ${width}px; height: 22px; top: 0; background: ${catColor}; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 3px; color: ${textColor}; font-size: 9px; font-weight: 700; box-shadow: 0 1px 5px ${catColor}50; overflow: hidden; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';" onclick="openTimelineEditModal('${p.id}')">
             <div style="display: flex; align-items: center; flex-shrink: 0;">${stack}</div>
             <span style="background: ${chipBg}; padding: 0 4px; border-radius: 2px; font-size: 8px; font-weight: 700; flex-shrink: 0;">${p.progress}%</span>
           </div>
@@ -990,21 +1095,18 @@ function sortTimeline() { applyTimelineFilters(); }
 
 function renderBacklog() {
   const list = document.getElementById('backlog-list');
-  const tasks = [
-    { name:'Integração Greenhouse → Farol', project:'Farol de Vagas', priority:'high' },
-    { name:'Pesquisa com candidatos', project:'Parecer de Entrevista', priority:'medium' },
-    { name:'Especificar API de calendário', project:'Automação de Agendas', priority:'high' },
-    { name:'Treinar modelo de scoring', project:'POC: Entrevistas com IA', priority:'medium' },
-    { name:'Onboarding Teamguide · piloto', project:'Implantação Teamguide', priority:'low' },
-    { name:'Validação de erros de empresa', project:'Movimentações', priority:'high' },
-  ];
-  list.innerHTML = tasks.map(t => `
+  list.innerHTML = BACKLOG.map(t => `
     <div class="backlog-row">
-      <div>
+      <div style="flex: 1;">
         <div class="backlog-title">${t.name}</div>
         <div class="backlog-project">${t.project}</div>
+        ${t.description ? `<div style="font-size: 11px; color: var(--ink-3); margin-top: 4px;">${t.description}</div>` : ''}
       </div>
-      <span class="priority-badge priority-${t.priority}">${t.priority}</span>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="status-badge status-${t.status}">${t.status === 'todo' ? 'A Fazer' : t.status === 'in-progress' ? 'Em Progresso' : 'Concluído'}</span>
+        <span class="priority-badge priority-${t.priority}">${t.priority === 'high' ? 'Alta' : t.priority === 'medium' ? 'Média' : 'Baixa'}</span>
+        <button class="action-btn" onclick="deleteBacklogItem('${t.id}')" title="Deletar" style="width: 26px; height: 26px; padding: 0; display: flex; align-items: center; justify-content: center;">🗑</button>
+      </div>
     </div>
   `).join('');
 }
@@ -1086,6 +1188,42 @@ function closeInterfaceModal() {
   document.getElementById('interface-modal').classList.remove('active');
 }
 
+let editingProjectId = null;
+
+function openTimelineEditModal(id) {
+  editingProjectId = id;
+  const project = PROJECTS.find(p => p.id === id);
+  if (!project) return;
+  
+  document.getElementById('timeline-edit-title').textContent = `Editar Cronograma - ${project.name}`;
+  document.getElementById('timeline-project-info').textContent = `Projeto: ${project.name}`;
+  document.getElementById('timeline-start').value = project.startStr;
+  document.getElementById('timeline-end').value = project.endStr;
+  document.getElementById('timeline-progress').value = project.progress;
+  document.getElementById('timeline-edit-modal').classList.add('active');
+}
+
+function closeTimelineEditModal() {
+  document.getElementById('timeline-edit-modal').classList.remove('active');
+  editingProjectId = null;
+}
+
+function openNewBacklogModal() {
+  document.getElementById('backlog-form').reset();
+  document.getElementById('backlog-modal-title').textContent = 'Novo Item do Backlog';
+  document.getElementById('backlog-modal').classList.add('active');
+}
+
+function closeBacklogModal() {
+  document.getElementById('backlog-modal').classList.remove('active');
+}
+
+function deleteBacklogItem(id) {
+  if (!confirm('Deletar este item do backlog?')) return;
+  BACKLOG = BACKLOG.filter(item => item.id !== id);
+  renderBacklog();
+}
+
 function deleteProject(id) {
   if (!confirm('Deletar este projeto?')) return;
   PROJECTS = PROJECTS.filter(p => p.id !== id);
@@ -1122,6 +1260,49 @@ document.getElementById('project-form').addEventListener('submit', (e) => {
     });
   }
   closeModal();
+  applyFilters();
+  renderStats();
+  renderReports();
+});
+
+document.getElementById('backlog-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('backlog-name').value;
+  const project = document.getElementById('backlog-project').value;
+  const desc = document.getElementById('backlog-desc').value;
+  const priority = document.getElementById('backlog-priority').value;
+  const status = document.getElementById('backlog-status').value;
+  
+  BACKLOG.push({
+    id: 'b' + Date.now(),
+    name: name,
+    project: project,
+    description: desc,
+    priority: priority,
+    status: status,
+  });
+  
+  closeBacklogModal();
+  renderBacklog();
+});
+
+document.getElementById('timeline-edit-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const project = PROJECTS.find(p => p.id === editingProjectId);
+  if (!project) return;
+  
+  const startStr = document.getElementById('timeline-start').value;
+  const endStr = document.getElementById('timeline-end').value;
+  const progress = parseInt(document.getElementById('timeline-progress').value);
+  
+  project.startStr = startStr;
+  project.endStr = endStr;
+  project.start = dueToPos(startStr);
+  project.end = dueToPos(endStr);
+  project.progress = progress;
+  project.due = endStr;
+  
+  closeTimelineEditModal();
   applyFilters();
   renderStats();
   renderReports();
@@ -1174,10 +1355,24 @@ Object.values(TEAM).forEach(owner => {
   document.getElementById('form-owner').appendChild(o2);
 });
 
+PROJECTS.forEach(project => {
+  const option = document.createElement('option');
+  option.value = project.name;
+  option.textContent = project.name;
+  document.getElementById('backlog-project').appendChild(option);
+});
+
 document.getElementById('filter-date').addEventListener('change', applyFilters);
 document.getElementById('filter-status').addEventListener('change', applyFilters);
 document.getElementById('timeline-filter-stage').addEventListener('change', applyTimelineFilters);
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+document.addEventListener('keydown', (e) => { 
+  if (e.key === 'Escape') {
+    closeModal();
+    closeBacklogModal();
+    closeInterfaceModal();
+    closeTimelineEditModal();
+  }
+});
 
 renderProjects();
 renderStats();
