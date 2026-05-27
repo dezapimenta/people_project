@@ -98,32 +98,32 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   color: var(--ink-4);
-  margin-bottom: 8px;
+  margin-bottom: var(--space-4);
   letter-spacing: 0.08em;
 }
 
 .sidebar-item {
-  padding: 6px 9px;
+  font-size: 11px;
+  padding: var(--space-4) var(--space-6);
   border-radius: var(--r-md);
   cursor: pointer;
-  font-size: 11px;
-  color: var(--ink-2);
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
+  gap: 10px;
+  color: var(--ink-3);
 }
 
 .sidebar-item:hover {
-  background: var(--neon-blue-soft);
-  color: var(--neon-blue);
+  background: rgba(75, 163, 255, 0.08);
+  color: var(--ink-1);
 }
 
 .sidebar-item.active {
-  background: var(--neon-blue-soft);
-  color: var(--neon-blue);
-  border-color: rgba(75, 163, 255, 0.3);
+  background: rgba(75, 163, 255, 0.15);
+  border-left: 2px solid var(--neon-cyan);
+  padding-left: calc(var(--space-6) - 2px);
+  color: var(--neon-cyan);
   font-weight: 600;
 }
 
@@ -300,41 +300,33 @@ body {
   color: var(--ink-1);
 }
 
-.filter-group input::placeholder { color: var(--ink-4); }
-
 .filter-group input:focus,
 .filter-group select:focus {
   outline: none;
   border-color: var(--neon-cyan);
-  box-shadow: 0 0 0 3px rgba(0, 240, 220, 0.15);
+  box-shadow: 0 0 8px rgba(0, 240, 220, 0.2);
 }
 
-.filter-group select option { background: var(--bg-1); color: var(--ink-1); }
-
 /* ===== PROJECTS GRID ===== */
-.projects-container {
+.projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
 }
 
 .project-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--r-lg);
-  padding: var(--space-4);
+  padding: var(--space-6);
   backdrop-filter: blur(12px);
   transition: all 0.2s ease;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
 }
 
 .project-card:hover {
   border-color: var(--card-border-hover);
   background: var(--card-bg-strong);
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(0, 240, 220, 0.12);
 }
 
 .project-header {
@@ -380,19 +372,15 @@ body {
 .progress-header {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  margin-bottom: 5px;
-  color: var(--ink-3);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+  font-size: 9px;
 }
 
-.progress-header strong { color: var(--neon-cyan); font-weight: 700; }
-
 .progress-bar {
+  width: 100%;
   height: 6px;
   background: rgba(6, 13, 36, 0.6);
-  border-radius: 3px;
+  border-radius: 999px;
   overflow: hidden;
 }
 
@@ -612,70 +600,47 @@ body {
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 220, 0.3); }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(75, 163, 255, 0.3);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(75, 163, 255, 0.5); }
 </style>
 </head>
 <body>
 <div class="layout">
-  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">⚡</div>
-      <div>Projeto CoE<br><span style="font-size: 11px; color: var(--neon-cyan); font-weight: 500;">PEOPLE</span></div>
+      <div class="sidebar-logo-icon">◈</div>
+      <span>CoE</span>
     </div>
-
     <div class="sidebar-section">
-      <div class="sidebar-title">Navegação</div>
+      <div class="sidebar-title">Menu</div>
       <div class="sidebar-item active" data-tab="projetos"><span class="sidebar-icon">▦</span> Dashboard</div>
       <div class="sidebar-item" data-tab="timeline"><span class="sidebar-icon">⊟</span> Timeline</div>
       <div class="sidebar-item" data-tab="backlog"><span class="sidebar-icon">≡</span> Backlog</div>
     </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-title">Ações</div>
-      <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 8px;" onclick="openNewProjectModal()">+ Novo Projeto</button>
-      <button class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="exportCSV()">↓ Exportar CSV</button>
-    </div>
   </div>
 
-  <!-- MAIN -->
   <div class="main-area">
     <div class="header">
       <h1 id="page-title">Dashboard</h1>
       <div class="header-right">
-        <span><strong id="project-count" style="color: var(--neon-cyan);">0</strong> projetos</span>
-        <div style="display: flex; align-items: center; gap: 10px; padding-left: 16px; border-left: 1px solid var(--card-border);">
-          <div class="avatar avatar-photo" style="background-image: url('assets/team/andreza_pimenta.png'); background-size: cover; background-position: center;" title="Andreza Pimenta"></div>
-          <div style="line-height: 1.2;">
-            <div style="font-size: 13px; font-weight: 700; color: var(--ink-1);">Andreza Pimenta</div>
-            <div style="font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Group PM</div>
-          </div>
-        </div>
+        <span id="project-count">11</span> projetos
+        <button class="btn btn-primary" onclick="openNewProjectModal()" style="font-size: 9px; padding: 4px 8px; gap: 4px;">
+          ➕ Novo
+        </button>
+        <button class="btn btn-secondary" onclick="exportCSV()" style="font-size: 9px; padding: 4px 8px; gap: 4px;">
+          📥 CSV
+        </button>
       </div>
     </div>
 
     <div class="content-area">
-      <!-- DASHBOARD -->
       <div id="tab-projetos" class="tab-content">
         <div class="stats" id="stats-container"></div>
-
-        <div style="margin-bottom: var(--space-6);">
-          <div style="font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 8px;">Relatórios</div>
-          <div id="reports-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4);"></div>
-        </div>
-
         <div class="filters">
-          <div class="filter-group">
-            <label>Ordenar por data</label>
-            <select id="filter-date">
-              <option value="start-asc">Início (mais antigo)</option>
-              <option value="start-desc">Início (mais recente)</option>
-              <option value="end-asc">Fim (mais antigo)</option>
-              <option value="end-desc">Fim (mais recente)</option>
-            </select>
-          </div>
           <div class="filter-group">
             <label>Etapa</label>
             <select id="filter-status">
@@ -686,17 +651,25 @@ body {
               <option value="Go-to-Market: New Wave 2">Go-to-Market: New Wave 2</option>
             </select>
           </div>
+          <div class="filter-group">
+            <label>Ordenar por</label>
+            <select id="filter-date">
+              <option value="">Padrão</option>
+              <option value="start-asc">Início (mais próximos)</option>
+              <option value="start-desc">Início (mais distantes)</option>
+              <option value="end-asc">Término (mais próximos)</option>
+              <option value="end-desc">Término (mais distantes)</option>
+            </select>
+          </div>
         </div>
-
-        <div class="projects-container" id="projects-grid"></div>
+        <div class="projects-grid" id="projects-grid"></div>
       </div>
 
-      <!-- TIMELINE -->
       <div id="tab-timeline" class="tab-content" style="display: none;">
-        <div style="display: flex; gap: var(--space-4); margin-bottom: var(--space-4); flex-wrap: wrap; align-items: end;">
-          <div class="filter-group" style="min-width: 200px;">
+        <div class="filters" style="margin-bottom: var(--space-6);">
+          <div class="filter-group">
             <label>Etapa</label>
-            <select id="timeline-filter-stage">
+            <select id="timeline-filter-stage" onchange="applyTimelineFilters()">
               <option value="">Todas</option>
               <option value="Desenvolvimento">Desenvolvimento</option>
               <option value="Teste internos">Teste internos</option>
@@ -706,11 +679,10 @@ body {
           </div>
         </div>
         <div class="timeline-container">
-          <div id="timeline-container-inner" style="min-width: 570px;"></div>
+          <div id="timeline-container-inner"></div>
         </div>
       </div>
 
-      <!-- BACKLOG -->
       <div id="tab-backlog" class="tab-content" style="display: none;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
           <h2 style="margin: 0; font-size: 16px; color: var(--ink-1); font-weight: 700;">Backlog Items</h2>
@@ -858,7 +830,6 @@ const TEAM = {
   ap: { id:'ap', name:'Andreza Pimenta',     initials:'AP', color:'#00f0d4', photo:'assets/team/andreza_pimenta.png' },
 };
 
-// Stakeholders sem foto (Co-Owners e HRBPs externos ao Core team)
 const EXTRAS = {
   mh:  { id:'mh',  name:'Matheus Rocha',         initials:'MR', color:'#5fa8ff', photo:'assets/team/matheus_rocha.png' },
   ak:  { id:'ak',  name:'Amanda Komuta',         initials:'AK', color:'#ff5fa0', photo:'assets/team/amanda_komuta.png' },
@@ -912,7 +883,6 @@ const CATEGORY_TEXT = {
 
 let editingId = null;
 
-// Helper: renderiza um avatar de pessoa (com foto se tiver, ou iniciais)
 function personAvatar(person, size = 28, label = '') {
   if (!person) return '';
   const photoStyle = person.photo
@@ -1003,12 +973,10 @@ function renderTimeline(filtered = PROJECTS) {
     { label: 'Q3', start: 3, end: 6, color: 'linear-gradient(90deg, #00fff2, #b4ff3c)' },
   ];
 
-  // Sort by start date
   const sorted = [...filtered].sort((a, b) => a.start - b.start);
 
   let html = `<div style="position: relative;">`;
 
-  // Legend at TOP
   html += `<div style="display: flex; gap: 12px; margin-bottom: 10px; padding: 8px 10px; background: rgba(6, 13, 36, 0.4); border: 1px solid var(--card-border); border-radius: 6px; flex-wrap: wrap;">
     <div style="font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; align-self: center;">Etapas:</div>`;
   Object.entries(CATEGORY_COLORS).forEach(([cat, color]) => {
@@ -1018,7 +986,6 @@ function renderTimeline(filtered = PROJECTS) {
   });
   html += `</div>`;
 
-  // Quarters bar
   html += `<div style="display: flex; align-items: center; margin-bottom: 2px;">
     <div style="width: ${LABEL_WIDTH}px;"></div>
     <div style="display: flex; width: ${TIMELINE_WIDTH}px; height: 18px; border-radius: 4px; overflow: hidden;">`;
@@ -1028,7 +995,6 @@ function renderTimeline(filtered = PROJECTS) {
   });
   html += `</div></div>`;
 
-  // Month labels
   html += `<div style="display: flex; align-items: center; margin-bottom: 8px;">
     <div style="width: ${LABEL_WIDTH}px;"></div>
     <div style="display: flex; width: ${TIMELINE_WIDTH}px;">`;
@@ -1037,7 +1003,6 @@ function renderTimeline(filtered = PROJECTS) {
   });
   html += `</div></div>`;
 
-  // Today line
   const todayLeft = LABEL_WIDTH + TODAY_POS * MONTH_WIDTH;
   html += `
     <div style="position: absolute; left: ${todayLeft}px; top: 0; bottom: 0; width: 1.5px; background: #00fff2; z-index: 5; box-shadow: 0 0 8px rgba(0,255,242,0.6);">
@@ -1045,7 +1010,6 @@ function renderTimeline(filtered = PROJECTS) {
     </div>
   `;
 
-  // All projects (no grouping)
   sorted.forEach(p => {
     const catColor = CATEGORY_COLORS[p.category];
     const textColor = CATEGORY_TEXT[p.category] || '#171e3d';
