@@ -49,9 +49,24 @@ body {
   min-height: 100vh;
 }
 
-.layout {
+.app-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
 }
 
 /* ===== SIDEBAR ===== */
@@ -98,45 +113,36 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   color: var(--ink-4);
-  margin-bottom: var(--space-4);
+  margin-bottom: 8px;
   letter-spacing: 0.08em;
 }
 
 .sidebar-item {
-  font-size: 11px;
-  padding: var(--space-4) var(--space-6);
+  padding: 6px 9px;
   border-radius: var(--r-md);
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 11px;
+  color: var(--ink-2);
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: var(--ink-3);
+  gap: 12px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .sidebar-item:hover {
-  background: rgba(75, 163, 255, 0.08);
-  color: var(--ink-1);
+  background: var(--neon-blue-soft);
+  color: var(--neon-blue);
 }
 
 .sidebar-item.active {
-  background: rgba(75, 163, 255, 0.15);
-  border-left: 2px solid var(--neon-cyan);
-  padding-left: calc(var(--space-6) - 2px);
-  color: var(--neon-cyan);
+  background: var(--neon-blue-soft);
+  color: var(--neon-blue);
+  border-color: rgba(75, 163, 255, 0.3);
   font-weight: 600;
 }
 
 .sidebar-icon { font-size: 16px; }
-
-/* ===== MAIN AREA ===== */
-.main-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-width: 0;
-}
 
 .header {
   padding: var(--space-4) var(--space-6);
@@ -161,12 +167,6 @@ body {
   gap: var(--space-4);
   color: var(--ink-3);
   font-size: 13px;
-}
-
-.content-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--space-6);
 }
 
 /* ===== BUTTONS ===== */
@@ -207,6 +207,90 @@ body {
   border-color: var(--neon-cyan);
 }
 
+.timeline-sort-btn {
+  background: rgba(20, 32, 70, 0.5);
+  border: 1px solid var(--card-border);
+  color: var(--ink-2);
+  padding: 4px var(--space-4);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.timeline-sort-btn:hover, .timeline-sort-btn.active {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 220, 0.05);
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  color: var(--ink-3);
+  cursor: pointer;
+  font-size: 11px;
+  transition: color 0.2s;
+  padding: 2px var(--space-4);
+}
+.action-btn:hover { color: var(--neon-cyan); }
+
+/* ===== SWITCH TOGGLE ===== */
+.view-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding-left: 12px;
+  border-left: 1px solid var(--card-border);
+}
+
+.toggle-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+  color: var(--ink-4);
+}
+
+.toggle-label.active {
+  color: var(--neon-cyan);
+}
+
+.toggle-switch {
+  width: 44px;
+  height: 22px;
+  background: rgba(20, 32, 70, 0.7);
+  border: 1px solid rgba(120, 180, 255, 0.2);
+  border-radius: 999px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.view-toggle-container.kpi-active .toggle-switch {
+  border-color: var(--neon-blue);
+}
+
+.view-toggle-container.kpi-active .toggle-switch::after {
+  transform: translateX(22px);
+  background: var(--neon-blue);
+}
+
 /* ===== CARDS ===== */
 .card {
   background: var(--card-bg);
@@ -225,7 +309,7 @@ body {
 /* ===== STATS ===== */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--space-6);
   margin-bottom: var(--space-8);
 }
@@ -234,19 +318,10 @@ body {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--r-lg);
-  padding: var(--space-4);
+  padding: var(--space-6) var(--space-4);
   backdrop-filter: blur(12px);
   position: relative;
   overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
-  opacity: 0.6;
 }
 
 .stat-label {
@@ -300,33 +375,32 @@ body {
   color: var(--ink-1);
 }
 
-.filter-group input:focus,
-.filter-group select:focus {
-  outline: none;
-  border-color: var(--neon-cyan);
-  box-shadow: 0 0 8px rgba(0, 240, 220, 0.2);
-}
+.filter-group select option { background: var(--bg-1); color: var(--ink-1); }
 
 /* ===== PROJECTS GRID ===== */
-.projects-grid {
+.projects-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
 }
 
 .project-card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
   border-radius: var(--r-lg);
-  padding: var(--space-6);
+  padding: var(--space-4);
   backdrop-filter: blur(12px);
   transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .project-card:hover {
   border-color: var(--card-border-hover);
   background: var(--card-bg-strong);
   transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 240, 220, 0.12);
 }
 
 .project-header {
@@ -335,8 +409,6 @@ body {
   align-items: flex-start;
   margin-bottom: var(--space-4);
 }
-
-.project-icon { font-size: 18px; }
 
 .project-status {
   display: inline-block;
@@ -372,15 +444,19 @@ body {
 .progress-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 4px;
-  font-size: 9px;
+  font-size: 10px;
+  margin-bottom: 5px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
+.progress-header strong { color: var(--neon-cyan); font-weight: 700; }
+
 .progress-bar {
-  width: 100%;
   height: 6px;
   background: rgba(6, 13, 36, 0.6);
-  border-radius: 999px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
@@ -389,60 +465,6 @@ body {
   background: linear-gradient(90deg, var(--neon-cyan), var(--neon-blue));
   transition: width 0.3s ease;
   box-shadow: 0 0 8px rgba(0, 240, 220, 0.5);
-}
-
-.project-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--card-border);
-  margin-top: var(--space-4);
-}
-
-.project-owner { display: flex; align-items: center; gap: 10px; }
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  flex-shrink: 0;
-}
-.avatar-photo {
-  border: 2px solid var(--neon-cyan);
-  box-shadow: 0 0 0 1px rgba(0, 240, 220, 0.3), 0 0 12px rgba(0, 240, 220, 0.2);
-}
-
-.owner-info { font-size: 12px; }
-.owner-name { font-weight: 600; color: var(--ink-2); }
-.owner-due { font-size: 11px; color: var(--ink-4); margin-top: 1px; }
-
-.project-actions { display: flex; gap: 6px; }
-
-.action-btn {
-  width: 30px; height: 30px;
-  border: 1px solid var(--card-border);
-  border-radius: 50%;
-  background: rgba(6, 13, 36, 0.6);
-  color: var(--ink-3);
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.action-btn:hover {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
 }
 
 /* ===== MODAL ===== */
@@ -594,56 +616,74 @@ body {
 }
 
 @media (max-width: 1024px) {
-  .sidebar { width: 220px; }
+  .sidebar { width: 140px; }
   .filters { grid-template-columns: 1fr; }
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(75, 163, 255, 0.3);
-  border-radius: 5px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(75, 163, 255, 0.5); }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 220, 0.3); }
 </style>
 </head>
 <body>
-<div class="layout">
+<div class="app-container">
+  
   <div class="sidebar">
     <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">◈</div>
-      <span>CoE</span>
+      <div class="sidebar-logo-icon">⚡</div>
+      <div>Projeto CoE<br><span style="font-size: 11px; color: var(--neon-cyan); font-weight: 500;">PEOPLE</span></div>
     </div>
+
     <div class="sidebar-section">
-      <div class="sidebar-title">Menu</div>
+      <div class="sidebar-title">Navegação</div>
       <div class="sidebar-item active" data-tab="projetos"><span class="sidebar-icon">▦</span> Dashboard</div>
       <div class="sidebar-item" data-tab="timeline"><span class="sidebar-icon">⊟</span> Timeline</div>
       <div class="sidebar-item" data-tab="backlog"><span class="sidebar-icon">≡</span> Backlog</div>
     </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Ações</div>
+      <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-bottom: 8px;" onclick="openNewProjectModal()">+ Novo Projeto</button>
+    </div>
   </div>
 
-  <div class="main-area">
+  <div class="main-content">
     <div class="header">
       <h1 id="page-title">Dashboard</h1>
       <div class="header-right">
-        <span id="project-count">11</span> projetos
-        <button class="btn btn-primary" onclick="openNewProjectModal()" style="font-size: 9px; padding: 4px 8px; gap: 4px;">
-          ➕ Novo
-        </button>
-        <button class="btn btn-secondary" onclick="exportCSV()" style="font-size: 9px; padding: 4px 8px; gap: 4px;">
-          📥 CSV
-        </button>
+        <span><strong id="project-count" style="color: var(--neon-cyan);">0</strong> projetos</span>
+        <div style="display: flex; align-items: center; gap: 10px; padding-left: 12px; border-left: 1px solid var(--card-border);">
+          <div class="avatar avatar-photo" style="background-image: url('assets/team/andreza_pimenta.png'); background-size: cover; background-position: center;" title="Andreza Pimenta"></div>
+          <div style="line-height: 1.2;">
+            <div style="font-size: 13px; font-weight: 700; color: var(--ink-1);">Andreza Pimenta</div>
+            <div style="font-size: 10px; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600;">Group PM</div>
+          </div>
+        </div>
       </div>
     </div>
 
     <div class="content-area">
+      
       <div id="tab-projetos" class="tab-content">
         <div class="stats" id="stats-container"></div>
+
         <div class="filters">
           <div class="filter-group">
-            <label>Etapa</label>
-            <select id="filter-status">
+            <label>Ordenar por</label>
+            <select id="filter-date" onchange="applyDashboardFilters()">
+              <option value="start-asc">Início (mais antigo)</option>
+              <option value="start-desc">Início (mais recente)</option>
+              <option value="end-asc">Fim (mais antigo)</option>
+              <option value="end-desc">Fim (mais recente)</option>
+              <option value="interface-asc">Interface / Infraestrutura (A-Z)</option>
+              <option value="owner-asc">Owner (A-Z)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Etapa Atual do Projeto</label>
+            <select id="filter-status" onchange="applyDashboardFilters()">
               <option value="">Todas</option>
               <option value="Desenvolvimento">Desenvolvimento</option>
               <option value="Teste internos">Teste internos</option>
@@ -651,35 +691,30 @@ body {
               <option value="Go-to-Market: New Wave 2">Go-to-Market: New Wave 2</option>
             </select>
           </div>
-          <div class="filter-group">
-            <label>Ordenar por</label>
-            <select id="filter-date">
-              <option value="">Padrão</option>
-              <option value="start-asc">Início (mais próximos)</option>
-              <option value="start-desc">Início (mais distantes)</option>
-              <option value="end-asc">Término (mais próximos)</option>
-              <option value="end-desc">Término (mais distantes)</option>
-            </select>
-          </div>
         </div>
-        <div class="projects-grid" id="projects-grid"></div>
+
+        <div class="projects-container" id="projects-grid"></div>
       </div>
 
       <div id="tab-timeline" class="tab-content" style="display: none;">
-        <div class="filters" style="margin-bottom: var(--space-6);">
-          <div class="filter-group">
-            <label>Etapa</label>
-            <select id="timeline-filter-stage" onchange="applyTimelineFilters()">
-              <option value="">Todas</option>
-              <option value="Desenvolvimento">Desenvolvimento</option>
-              <option value="Teste internos">Teste internos</option>
-              <option value="Go-to-Market: New Wave 1">Go-to-Market: New Wave 1</option>
-              <option value="Go-to-Market: New Wave 2">Go-to-Market: New Wave 2</option>
-            </select>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); background: var(--card-bg); border: 1px solid var(--card-border); padding: 10px 14px; border-radius: var(--r-lg); backdrop-filter: blur(12px); flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span style="font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-right: var(--space-4);">Ordenar Linha:</span>
+            <button class="timeline-sort-btn active" id="sort-timeline-start" onclick="sortTimeline('start')">Testes Internos</button>
+            <button class="timeline-sort-btn" id="sort-timeline-owner" onclick="sortTimeline('owner')">Owner</button>
+            <button class="timeline-sort-btn" id="sort-timeline-infra" onclick="sortTimeline('infra')">Interface</button>
+            <button class="timeline-sort-btn" id="sort-timeline-impact" onclick="sortTimeline('impact')">Público Alvo</button>
+          </div>
+          
+          <div class="view-toggle-container" id="timeline-toggle-switch" onclick="toggleTimelineView()">
+            <span class="toggle-label active" id="lbl-view-timeline">Timeline</span>
+            <div class="toggle-switch"></div>
+            <span class="toggle-label" id="lbl-view-kpis">KPIs</span>
           </div>
         </div>
+
         <div class="timeline-container">
-          <div id="timeline-container-inner"></div>
+          <div id="timeline-container-inner" style="min-width: 570px;"></div>
         </div>
       </div>
 
@@ -692,13 +727,10 @@ body {
         </div>
         <div class="backlog-list" id="backlog-list"></div>
       </div>
-
-      <!-- RELATÓRIOS removido — integrado ao Dashboard -->
     </div>
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal" id="project-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -713,7 +745,7 @@ body {
           <option value="planning">Planejamento</option>
         </select>
       </div>
-      <div class="form-group"><label>Etapa</label>
+      <div class="form-group"><label>Etapa Atual</label>
         <select id="form-category" required>
           <option value="Desenvolvimento">Desenvolvimento</option>
           <option value="Teste internos">Teste internos</option>
@@ -723,7 +755,7 @@ body {
       </div>
       <div class="form-group"><label>Progresso (%)</label><input type="number" id="form-progress" min="0" max="100" value="0" required></div>
       <div class="form-group"><label>Owner</label><select id="form-owner" required></select></div>
-      <div class="form-group"><label>Prazo</label><input type="text" id="form-due" placeholder="ex: 12 jun" required></div>
+      <div class="form-group"><label>Prazo Geral</label><input type="text" id="form-due" placeholder="ex: 12 jun" required></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
         <button type="submit" class="btn btn-primary">Salvar</button>
@@ -732,49 +764,22 @@ body {
   </div>
 </div>
 
-<!-- INTERFACE VIEWER MODAL -->
-<div class="modal" id="interface-modal">
-  <div style="position: relative; width: 90vw; height: 90vh; background: var(--bg-deep); border: 1px solid var(--card-border); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column;">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--card-border); background: rgba(10, 17, 41, 0.6);">
-      <h2 id="interface-title" style="margin: 0; font-size: 16px; color: var(--ink-1); font-weight: 700;"></h2>
-      <button class="modal-close" onclick="closeInterfaceModal()">✕</button>
-    </div>
-    <div style="flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; background: rgba(6, 13, 36, 0.6);">
-      <img id="interface-image" src="" alt="Interface" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
-    </div>
-  </div>
-</div>
-
-<!-- BACKLOG ITEM MODAL -->
 <div class="modal" id="backlog-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeBacklogModal()">✕</button>
     <div class="modal-header" id="backlog-modal-title">Novo Item do Backlog</div>
     <form id="backlog-form">
-      <div class="form-group">
-        <label>Nome da Tarefa</label>
-        <input type="text" id="backlog-name" placeholder="Ex: Integração Greenhouse → Farol" required>
-      </div>
-      <div class="form-group">
-        <label>Projeto Relacionado</label>
-        <select id="backlog-project" required>
-          <option value="">Selecione um projeto</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Descrição</label>
-        <textarea id="backlog-desc" placeholder="Descrição da tarefa (opcional)"></textarea>
-      </div>
-      <div class="form-group">
-        <label>Prioridade</label>
+      <div class="form-group"><label>Nome da Tarefa</label><input type="text" id="backlog-name" placeholder="Ex: Integração Greenhouse" required></div>
+      <div class="form-group"><label>Projeto Relacionado</label><select id="backlog-project" required><option value="">Selecione um projeto</option></select></div>
+      <div class="form-group"><label>Descrição</label><textarea id="backlog-desc" placeholder="Descrição opcional"></textarea></div>
+      <div class="form-group"><label>Prioridade</label>
         <select id="backlog-priority" required>
           <option value="low">Baixa</option>
           <option value="medium" selected>Média</option>
           <option value="high">Alta</option>
         </select>
       </div>
-      <div class="form-group">
-        <label>Status</label>
+      <div class="form-group"><label>Status</label>
         <select id="backlog-status" required>
           <option value="todo">A Fazer</option>
           <option value="in-progress">Em Progresso</option>
@@ -789,30 +794,37 @@ body {
   </div>
 </div>
 
-<!-- TIMELINE EDIT MODAL -->
 <div class="modal" id="timeline-edit-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeTimelineEditModal()">✕</button>
-    <div class="modal-header" id="timeline-edit-title">Editar Cronograma</div>
+    <div class="modal-header" id="timeline-edit-title">Editar Cronograma de Etapas</div>
     <form id="timeline-edit-form">
       <div style="background: rgba(75, 163, 255, 0.06); border: 1px solid rgba(75, 163, 255, 0.2); border-radius: var(--r-md); padding: var(--space-6); margin-bottom: var(--space-6);">
-        <div id="timeline-project-info" style="color: var(--ink-2); font-weight: 500; margin-bottom: var(--space-4);"></div>
+        <div id="timeline-project-info" style="color: var(--ink-2); font-weight: 500;"></div>
       </div>
+      
       <div class="form-group">
-        <label>Data de Início (ex: 12 jun)</label>
+        <label>Escolha a Etapa para Definir Datas</label>
+        <select id="timeline-stage-select" onchange="loadStageDatesData()">
+          <option value="Desenvolvimento">Desenvolvimento</option>
+          <option value="Testes Internos">Teste internos</option>
+          <option value="Go-to-Market: New Wave 1">Go-to-Market: New Wave 1</option>
+          <option value="Go-to-Market: New Wave 2">Go-to-Market: New Wave 2</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Data de Início da Etapa (ex: 10 abr, 12 jun)</label>
         <input type="text" id="timeline-start" placeholder="ex: 12 jun" required>
       </div>
       <div class="form-group">
-        <label>Data de Término (ex: 24 jul)</label>
+        <label>Data de Término da Etapa (ex: 22 mai, 24 jul)</label>
         <input type="text" id="timeline-end" placeholder="ex: 24 jul" required>
       </div>
-      <div class="form-group">
-        <label>Progresso (%)</label>
-        <input type="number" id="timeline-progress" min="0" max="100" value="0" required>
-      </div>
+      <div class="form-group" style="display:none;"><label>Progresso desta Etapa (%)</label><input type="number" id="timeline-progress" min="0" max="100" value="0" required></div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="closeTimelineEditModal()">Cancelar</button>
-        <button type="submit" class="btn btn-primary">Salvar Mudanças</button>
+        <button type="submit" class="btn btn-primary">Salvar Etapa na Barra</button>
       </div>
     </form>
   </div>
@@ -838,23 +850,146 @@ const EXTRAS = {
   pja: { id:'pja', name:'Paula Jannini',         initials:'PJ', color:'#ff5fa0', photo:'assets/team/paula_jannini.png' },
   cpc: { id:'cpc', name:'Camila Pereira',        initials:'CP', color:'#5fffb0', photo:'assets/team/camila_pereira.png' },
   gz:  { id:'gz',  name:'Gustavo Zaluski',       initials:'GZ', color:'#b4ff3c', photo:'assets/team/gustavo_zaluski.png' },
-  cea: { id:'cea', name:'Camila Erika',          initials:'CE', color:'#00f0d4' },
+  cea: { id:'cea', name:'Camila Erika',          alwaysHide: true, initials:'CE', color:'#00f0d4' },
   lm:  { id:'lm',  name:'Ligia Mayumi',          initials:'LM', color:'#c8a4ff', photo:'assets/team/ligia_mayumi.png' },
   gg:  { id:'gg',  name:'Gabriela Gonçales',    initials:'GG', color:'#ffa94d', photo:'assets/team/gabriela_goncales.png' },
 };
 
 let PROJECTS = [
-  { id:'p1', name:'Abertura de Vagas', sub:'Otimização via Slack com foco em redução de carga operacional', icon:'📋', iface:'assets/interfaces/slack.png', status:'progress', progress: 60, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.mh, due: '24 jul', startStr: '12 jun', endStr: '24 jul', start: 2.4, end: 3.8, category:'Go-to-Market: New Wave 1' },
-  { id:'p2', name:'POC: Hunting Assistant LinkedIn', sub:'Sourcing automatizado via IA — 4h economizadas por função', icon:'🎯', iface:'assets/interfaces/linkedin.png', status:'discovery', progress: 35, owner: TEAM.nh, coOwner: TEAM.ap, hrbp: null, due: '22 mai', startStr: '10 abr', endStr: '22 mai', start: 0.33, end: 1.73, category:'Teste internos' },
-  { id:'p3', name:'Farol de Vagas', sub:'Dashboard automatizado de insights e status de vagas via Slack', icon:'🛰️', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 20, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.gz, due: '26 ago', startStr: '15 jul', endStr: '26 ago', start: 3.5, end: 4.87, category:'Desenvolvimento' },
-  { id:'p4', name:'Parecer de Entrevista', sub:'IA para guiar gestores com sugestões e score de desempenho', icon:'📝', iface:'assets/interfaces/slack.png', status:'progress', progress: 72, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '19 ago', startStr: '12 jun', endStr: '19 ago', start: 2.4, end: 4.63, category:'Go-to-Market: New Wave 1' },
-  { id:'p5', name:'POC: Entrevistas com IA', sub:'Análise automática de candidatos com score de aderência', icon:'🤖', iface:'assets/interfaces/lever.png', status:'progress', progress: 65, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '10 jul', startStr: '29 mai', endStr: '10 jul', start: 1.97, end: 3.33, category:'Teste internos' },
-  { id:'p6', name:'Automação de Agendas', sub:'Agendamento inteligente eliminando conflitos horários', icon:'📅', iface:'assets/interfaces/google_calendar.png', status:'progress', progress: 58, owner: TEAM.fn, coOwner: EXTRAS.ak, hrbp: EXTRAS.apc, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Go-to-Market: New Wave 1' },
-  { id:'p7', name:'Simulação de Offer', sub:'Gerador inteligente de propostas com automação de governança', icon:'💰', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 28, owner: TEAM.sm, coOwner: EXTRAS.alo, hrbp: EXTRAS.mh, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Desenvolvimento' },
-  { id:'p8', name:'Movimentações', sub:'Módulo de estrutura e organograma com automação segura', icon:'🔁', iface:'assets/interfaces/people_platform.png', status:'discovery', progress: 42, owner: TEAM.cj, coOwner: EXTRAS.pja, hrbp: EXTRAS.cpc, due: '17 jul', startStr: '05 jun', endStr: '17 jul', start: 2.17, end: 3.57, category:'Go-to-Market: New Wave 2' },
-  { id:'p9', name:'People Agent', sub:'Assistente IA para dados de People, Budget e FAQ', icon:'✨', iface:'assets/interfaces/people_platform.png', status:'progress', progress: 55, owner: TEAM.tl, coOwner: TEAM.ap, hrbp: EXTRAS.gz, due: '05 jul', startStr: '26 mai', endStr: '05 jul', start: 1.87, end: 3.17, category:'Go-to-Market: New Wave 1' },
-  { id:'p10', name:'Dashboard Líder (New DDL)', sub:'Storytelling de dados com frequência diária em tempo real', icon:'📊', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 38, owner: TEAM.sm, coOwner: TEAM.tl, hrbp: null, due: '27 jul', startStr: '15 jun', endStr: '27 jul', start: 2.5, end: 3.9, category:'Desenvolvimento' },
-  { id:'p11', name:'Implantação Teamguide', sub:'Centralização de treinamento, carreira, performance e skills', icon:'🚀', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 25, owner: TEAM.rn, coOwner: EXTRAS.gg, hrbp: EXTRAS.lm, due: '12 set', startStr: '01 ago', endStr: '12 set', start: 4.03, end: 5.4, category:'Desenvolvimento' },
+  { id:'p1', name:'Abertura de Vagas', sub:'Otimização via Slack com foco em redução de carga operacional', icon:'📋', iface:'assets/interfaces/slack.png', status:'progress', progress: 60, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.mh, due: '24 jul', category:'Go-to-Market: New Wave 1', impacted: 'Líder Neon',
+    stages: { 
+      'Desenvolvimento': { startStr: '01 mar', endStr: '05 jun', progress: 70 },
+      'Testes Internos': { startStr: '08 jun', endStr: '26 jun', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '29 jun', endStr: '10 jul', progress: 60 },
+      'Go-to-Market: New Wave 2': { startStr: '13 jul', endStr: '24 jul', progress: 60 }  
+    },
+    metrics: [
+      { name: 'CSAT', baseline: '3,6', info: 'Satisfação do Gestor com o novo processo de abertura da Vaga no Slack', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Redução de Campos de Preechimento [Qnt]', baseline: '27', info: 'Redução dos Campos de preenchimento manual.', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p2', name:'Hunting Assistente', sub:'Sourcing automatizado via IA — 4h economizadas por função', iface:'assets/interfaces/linkedin.png', status:'discovery', progress: 35, owner: TEAM.nh, coOwner: TEAM.ap, hrbp: null, due: '22 mai', category:'Teste internos', impacted: 'TA',
+    stages: {       
+      'Desenvolvimento': { startStr: '01 abr', endStr: '10 abr', progress: 100 },
+      'Testes Internos': { startStr: '13 abr', endStr: '12 jul', progress: 80 }
+    },
+    metrics: [
+      { name: 'Taxa de Conversão [%]', baseline: '64%', info: 'Leads convertidos por Hiring Assistant / Total de Leads convertidos', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Contratação [%]', baseline: '34%', info: 'Contratados por Hiring Assistant / Total de Contratados', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Usabilidade do linkedin hiring assistant', baseline: '0', info: 'Usabilidade do linkedin hiring assistant pelos recrutadores (por mês por recrutador)', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p3', name:'Farol de Vagas', sub:'Dashboard automatizado de insights e status de vagas via Slack', icon:'🛰️', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 20, owner: TEAM.fn, coOwner: TEAM.rn, hrbp: EXTRAS.gz, due: '26 ago', category:'Desenvolvimento', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '01 jul', endStr: '15 jul', progress: 0 },
+      'Testes Internos': { startStr: '18 jul', endStr: '29 jul', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '01 ago', endStr: '21 ago', progress: 0 },  
+    },
+    metrics: [
+      { name: 'Taxa de Adoção[%]', baseline: '0', info: '% líderes com vagas abertas que acessam o painel.', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'CSAT', baseline: '3,6', info: 'Satisfação do Gestor com a ferramenta', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  // ATUALIZADO: CONFIGURAÇÃO DE MÉTRICAS E BASELINES EXATAS DO PROJETO IA DE ENTREVISTAS
+  { id:'p4', name:'Parecer de Entrevista', sub:'IA para guiar gestores com sugestões e score de desempenho', icon:'📝', iface:'assets/interfaces/slack.png', status:'progress', progress: 72, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '19 ago', category:'Go-to-Market: New Wave 1', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '01 abr', endStr: '12 jun', progress: 100 },
+      'Testes Internos': { startStr: '23 jun', endStr: '11 jul', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '14 jul', endStr: '13 ago', progress: 0 },
+      'Go-to-Market: New Wave 2': { startStr: '16 ago', endStr: '27 ago', progress: 0 }  
+    },
+    metrics: [
+      { name: 'Score Candidato [%]', baseline: '0', info: 'Mede a qualidade do candidato (recomendações dos entrevistadores, consenso entre etapas, scores de competências 1-5)', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Efetividade por entrevistador [%]', baseline: '0', info: 'pipeline_quality_score médio por avaliador, para identificar onde o preenchimento de pareceres está mais fraco', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p5', name:'Entrevistas com IA', sub:'Análise automática de candidatos com score de aderência', icon:'🤖', iface:'assets/interfaces/lever.png', status:'progress', progress: 65, owner: TEAM.ml, coOwner: TEAM.ap, hrbp: EXTRAS.lm, due: '10 jul', category:'Teste internos', impacted: 'TA',
+    stages: {       
+      'Desenvolvimento': { startStr: '10 abr', endStr: '20 mai', progress: 100 },
+      'Testes Internos': { startStr: '10 abr', endStr: '20 mai', progress: 100 },
+      'Go-to-Market: New Wave 1': { startStr: '21 mai', endStr: '24 jul', progress: 60 },
+      'Go-to-Market: New Wave 2': { startStr: '21 mai', endStr: '24 jul', progress: 60 }  
+    },
+    metrics: [
+      { name: 'Taxa de conversão [%]', baseline: '52,9', info: 'Taxa de conversão Triagem > Entrevista c/ Gestor (IA x Humano)', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Contratação [%]', baseline: '0', info: 'Volume de candidatos Stage 2 que chegaram ao final do processo', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Tempo média na etapa de screening [dias]', baseline: '6,7', info: 'Tempo Médio de Permanência na Etapa de Entrevista', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de contratação de pessoas diversas [%]', baseline: '65', info: 'Contratados com recorte de diversidade (Mulher ou Preta/Parda ou PCD)/Total de Contratados', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'NPS do Candidato', baseline: '6,8', info: 'Satisfação do candidato com o processo atual', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p6', name:'Automação de Agendas', sub:'Agendamento inteligente eliminando conflitos horários', icon:'📅', iface:'assets/interfaces/slack.png', status:'progress', progress: 58, owner: TEAM.fn, coOwner: EXTRAS.ak, hrbp: EXTRAS.apc, due: '05 jul', category:'Go-to-Market: New Wave 1', impacted: 'TA',
+    stages: {       
+      'Desenvolvimento': { startStr: '10 abr', endStr: '20 mai', progress: 100 },
+      'Testes Internos': { startStr: '10 abr', endStr: '20 mai', progress: 100 },
+      'Go-to-Market: New Wave 1': { startStr: '21 mai', endStr: '24 jul', progress: 60 },
+      'Go-to-Market: New Wave 2': { startStr: '21 mai', endStr: '24 jul', progress: 60 }  
+    },
+    metrics: [
+      { name: 'Lead Time [h/mês]', baseline: '140', info: 'Tempo no agendamento de candidatos pelo time de TA', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p7', name:'Simulação de Offer', sub:'Gerador inteligente de propostas com automação de governança', icon:'💰', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 28, owner: TEAM.ap, coOwner: TEAM.ml, hrbp: EXTRAS.mh, due: '05 jul', category:'Desenvolvimento', impacted: 'TA',
+    stages: {       
+      'Desenvolvimento': { startStr: ' 05 mai', endStr: '29 mai', progress: 100 },
+      'Testes Internos': { startStr: '01 jun', endStr: '17 jun', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '20 jun', endStr: '20 jul', progress: 0 } 
+    },
+    metrics: [
+      { name: 'Lead Time [h/mês]', baseline: '80', info: 'Tempo no processo da Offer', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p8', name:'Movimentações', sub:'Módulo de estrutura e organograma com automação segura', icon:'🔁', iface:'assets/interfaces/people_platform.png', status:'discovery', progress: 42, owner: TEAM.cj, coOwner: EXTRAS.pja, hrbp: EXTRAS.cpc, due: '17 jul', category:'Go-to-Market: New Wave 2', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '10 abr', endStr: '05 jun', progress: 90 },
+      'Testes Internos': { startStr: '08 jun', endStr: '19 jun', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '22 jun', endStr: '17 jul', progress: 0 },
+      'Go-to-Market: New Wave 2': { startStr: '20 jul', endStr: '31 jul', progress: 0 }  
+    },
+    metrics: [
+      { name: 'Taxa de Adoção (WAU: Weekly Active Users) [%]', baseline: '21%', info: '% líderes que acessam o Líder Hub pelo menos uma vez por semana', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Sucesso [%]', baseline: '0%', info: 'Movimentações concluídas com sucesso.', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Lead Time [h/mês]', baseline: '25', info: 'Tempo no processo de Movimentação Hierarquica no Líder Hub', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p9', name:'People Agent', sub:'Assistente IA para dados de People, Budget e FAQ', icon:'✨', iface:'assets/interfaces/people_platform.png', status:'progress', progress: 55, owner: TEAM.ap, coOwner: TEAM.tl, hrbp: EXTRAS.gz, due: '05 jul', category:'Go-to-Market: New Wave 1', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '01 mar', endStr: '28 mai', progress: 100 },
+      'Testes Internos': { startStr: '28 mai', endStr: '30 jun', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '03 jul', endStr: '02 ago', progress: 0 },
+      'Go-to-Market: New Wave 2': { startStr: '05 ago', endStr: '04 set', progress: 0 }  
+    },
+    metrics: [
+      { name: 'Taxa de Adoção (WAU: Weekly Active Users) [%]', baseline: '0%', info: '% líderes que acessam o Agente pelo menos uma vez por semana', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p10', name:'New DDL', sub:'Storytelling de dados com frequência diária em tempo real', icon:'📊', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 38, owner: TEAM.sm, coOwner: TEAM.tl, hrbp: null, due: '27 jul', category:'Desenvolvimento', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '01 mar', endStr: '15 jun', progress: 80 },
+      'Testes Internos': { startStr: '18 jun', endStr: '29 jun', progress: 0 },
+      'Go-to-Market: New Wave 1': { startStr: '02 jul', endStr: '13 jul', progress: 0 },
+      'Go-to-Market: New Wave 2': { startStr: '16 jul', endStr: '27 jul', progress: 0 }  
+    },
+    metrics: [
+      { name: 'Taxa de Adoção (MAU: Monthly Active Users) [%]', baseline: '15', info: '% líderes que acessam o DDL pelo menos uma vez por mês', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
+  { id:'p11', name:'Implantação Teamguide', sub:'Centralização de treinamento, carreira, performance e skills', icon:'🚀', iface:'assets/interfaces/people_platform.png', status:'planning', progress: 25, owner: TEAM.rn, coOwner: EXTRAS.gg, hrbp: EXTRAS.lm, due: '12 set', category:'Desenvolvimento', impacted: 'Líder Neon',
+    stages: {       
+      'Desenvolvimento': { startStr: '15 abr', endStr: '19 jun', progress: 80 },
+      'Testes Internos': { startStr: '22 jun', endStr: '03 jul', progress: 100 },
+      'Go-to-Market: New Wave 1': { startStr: '06 jul', endStr: '31 jul', progress: 60 }
+    },
+    metrics: [
+      { name: 'Taxa de conclusão de treinamentos obrigatórios [%]', baseline: '100%', info: '% de colaboradores com treinamentos obrigatórios concluídos', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de conclusão de treinamentos gerais [%]', baseline: '45%', info: '% de colaboradores com treinamentos de onboarding concluídos', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Incidência de Bugs', baseline: '35', info: 'Volume de tickets abertos no módulo de treinamento', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Adesão pesquisa Onboarding [%]', baseline: '38%', info: 'Adesão à pesquisas de Onboarding na plataforma', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Adesão pesquisa Hiring Manager [%]', baseline: '24%', info: 'Adesão à pesquisas de Hiring Manager na plataforma', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Adesão pesquisa de Clima [%]', baseline: '68%', info: 'Adesão à pesquisas de clima na plataforma', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' },
+      { name: 'Taxa de Adoção (MAU: Monthly Active Users) [%]', baseline: '0%', info: 'líderes que acessam o Dashboard de gestão de clima/carreira/1:1 etc pelo menos uma vez ao mês.', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }
+    ]
+  },
 ];
 
 let BACKLOG = [
@@ -866,35 +1001,59 @@ let BACKLOG = [
   { id:'b6', name:'Validação de erros de empresa', project:'Movimentações', priority:'high', status:'todo', description:'' },
 ];
 
-const STATUS_LABEL = { progress: 'Em andamento', discovery: 'Discovery', planning: 'Planejamento' };
+const STATUS_LABEL = { progress: 'Desenvolvimento', discovery: 'Testes Internos', planning: 'Go-to-Market' };
+
 const CATEGORY_COLORS = {
-  'Desenvolvimento':         '#008fff',
-  'Teste internos':          '#b4ff3c',
-  'Go-to-Market: New Wave 1':'#00fff2',
-  'Go-to-Market: New Wave 2':'#0000d3',
+  'Desenvolvimento':         'rgba(216, 216, 216, 0.55)',
+  'Testes Internos':          'rgba(180, 255, 60, 0.55)',
+  'Go-to-Market: New Wave 1': 'rgba(0, 240, 212, 0.55)',
+  'Go-to-Market: New Wave 2': 'rgba(75, 163, 255, 0.55)',
+};
+
+const CATEGORY_BORDERS = {
+  'Desenvolvimento':         'rgba(216, 216, 216, 0.85)',
+  'Testes Internos':          'var(--neon-lime)',
+  'Go-to-Market: New Wave 1': 'var(--neon-cyan)',
+  'Go-to-Market: New Wave 2': 'var(--neon-blue)',
 };
 
 const CATEGORY_TEXT = {
-  'Desenvolvimento':         '#171e3d',
-  'Teste internos':          '#171e3d',
-  'Go-to-Market: New Wave 1':'#171e3d',
-  'Go-to-Market: New Wave 2':'#ffffff',
+  'Desenvolvimento':         '#ffffff',
+  'Testes Internos':          '#060d24', 
+  'Go-to-Market: New Wave 1': '#060d24', 
+  'Go-to-Market: New Wave 2': '#ffffff',
 };
 
 let editingId = null;
+let editingProjectId = null;
+let currentActiveView = 'timeline'; 
 
+function dueToPos(due) {
+  if (!due) return 0;
+  const months = { abr: 0, mai: 1, jun: 2, jul: 3, ago: 4, set: 5 };
+  const parts = due.toLowerCase().trim().split(/\s+/);
+  if (parts.length < 2) return 0;
+  const day = parseInt(parts[0]) || 1;
+  const monthStr = parts[1].substring(0, 3);
+  const monthIdx = months[monthStr] !== undefined ? months[monthStr] : 0;
+  return monthIdx + (day / 30);
+}
+
+function generateTimelineAvatarHtml(person, size = 18) {
+  if (!person || !person.photo || person.alwaysHide) return '';
+  return `<img src="${person.photo}" alt="${person.name}" title="${person.name}" 
+               style="width: ${size}px; height: ${size}px; border-radius: 50%; border: 1.5px solid var(--neon-cyan); object-fit: cover; box-shadow: 0 0 4px rgba(0,240,220,0.15);" 
+               onerror="this.style.display='none';">`;
+}
+
+// ATUALIZADO: REMOVIDO EXCLUSIVAMENTE A EXIBIÇÃO DA GROUP PM (ANDREZA PIMENTA) DOS CARDS DO DASHBOARD
 function personAvatar(person, size = 28, label = '') {
-  if (!person) return '';
-  const photoStyle = person.photo
-    ? `background-image: url('${person.photo}'); background-size: cover; background-position: center;`
-    : `background: ${person.color}; color: var(--bg-deep); display: flex; align-items: center; justify-content: center; font-size: ${Math.round(size * 0.32)}px; font-weight: 700;`;
-  const initials = person.photo ? '' : person.initials;
+  if (!person || !person.photo || label === 'Group PM') return ''; 
   return `
     <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;" title="${person.name}${label ? ' · ' + label : ''}">
-      <div style="width: ${size}px; height: ${size}px; border-radius: 50%; ${photoStyle} border: 2px solid var(--neon-cyan); box-shadow: 0 0 0 1px rgba(0, 240, 220, 0.2);">${initials}</div>
+      <img src="${person.photo}" style="width: ${size}px; height: ${size}px; border-radius: 50%; border: 2px solid var(--neon-cyan); object-fit: cover;" onerror="this.parentNode.style.display='none';">
       ${label ? `<div style="font-size: 8px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; line-height: 1;">${label}</div>` : ''}
-    </div>
-  `;
+    </div>`;
 }
 
 function renderProjects(filtered = PROJECTS) {
@@ -903,11 +1062,8 @@ function renderProjects(filtered = PROJECTS) {
   grid.innerHTML = filtered.map(p => `
     <div class="project-card">
       <div class="project-header">
-        <div class="project-icon">${p.icon}</div>
         <div class="project-status ${p.status}">${STATUS_LABEL[p.status]}</div>
-      </div>
-      <div style="margin-bottom: var(--space-4); display: flex; align-items: center; justify-content: center; height: 60px; background: rgba(75, 163, 255, 0.06); border-radius: var(--r-md);">
-        <img src="${p.iface}" alt="${p.name}" style="max-width: 90%; max-height: 90%; object-fit: contain;" />
+        ${p.iface ? `<img src="${p.iface}" alt="${p.name}" style="max-width: 30%; max-height: 30%; object-fit: contain;" />` : ''}
       </div>
       <h3 class="project-title">${p.name}</h3>
       <p class="project-subtitle">${p.sub}</p>
@@ -916,146 +1072,229 @@ function renderProjects(filtered = PROJECTS) {
         <div class="progress-bar"><div class="progress-fill" style="width: ${p.progress}%"></div></div>
       </div>
 
-      <div style="display: flex; gap: 14px; align-items: center; padding: var(--space-4) 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); margin-top: var(--space-4);">
+      <div style="display: flex; gap: 14px; align-items: center; padding: var(--space-4) 0; border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); margin-top: var(--space-4); justify-content: center;">
         ${personAvatar(p.owner, 32, 'Owner')}
-        ${p.coOwner ? personAvatar(p.coOwner, 32, 'Co-Owner') : ''}
-        ${p.hrbp ? personAvatar(p.hrbp, 32, 'HRBP') : ''}
-        ${personAvatar(TEAM.ap, 32, 'Group PM')}
-        <div style="margin-left: auto; text-align: right; font-size: 11px; color: var(--ink-3);">
-          <div style="font-weight: 600; color: var(--ink-2);">📅 ${p.due}</div>
-          <div style="margin-top: 2px;">${p.category}</div>
-        </div>
+        ${personAvatar(p.coOwner, 32, 'Co-Owner')}
+        ${personAvatar(p.hrbp, 32, 'HRBP')}
       </div>
 
       <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--space-4);">
-        <div style="font-size: 12px; color: var(--ink-3);"><strong style="color: var(--ink-2);">${p.owner.name}</strong> · responsável</div>
-        <div class="project-actions">
-          <button class="action-btn" onclick="viewInterface('${p.id}')" title="Ver interface">🖼️</button>
-          <button class="action-btn" onclick="openEditModal('${p.id}')" title="Editar">✎</button>
-          <button class="action-btn" onclick="deleteProject('${p.id}')" title="Deletar">🗑</button>
-        </div>
+        <button class="action-btn" onclick="openEditModal('${p.id}')" title="Editar">✎ Editar</button>
+        <button class="action-btn" onclick="deleteProject('${p.id}')" title="Deletar">🗑 Deletar</button>
       </div>
     </div>
   `).join('');
 }
 
 function renderStats() {
-  const statusCounts = {};
-  PROJECTS.forEach(p => { statusCounts[p.status] = (statusCounts[p.status] || 0) + 1; });
-  const avg = Math.round(PROJECTS.reduce((sum, p) => sum + p.progress, 0) / PROJECTS.length);
+  const countDesenv = PROJECTS.filter(p => p.category === 'Desenvolvimento').length;
+  const countTestes = PROJECTS.filter(p => p.category === 'Teste internos').length;
+  const countWave1 = PROJECTS.filter(p => p.category === 'Go-to-Market: New Wave 1').length;
+  const countWave2 = PROJECTS.filter(p => p.category === 'Go-to-Market: New Wave 2').length;
+  
   document.getElementById('stats-container').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Total de Projetos</div><div class="stat-value">${PROJECTS.length}</div></div>
-    <div class="stat-card"><div class="stat-label">Progresso Médio</div><div class="stat-value">${avg}%</div></div>
-    <div class="stat-card"><div class="stat-label">Em Andamento</div><div class="stat-value">${statusCounts.progress || 0}</div></div>
-    <div class="stat-card"><div class="stat-label">Discovery</div><div class="stat-value">${statusCounts.discovery || 0}</div></div>
+    <div class="stat-card"><div class="stat-label">Total Projetos</div><div class="stat-value">${PROJECTS.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Desenvolvimento</div><div class="stat-value">${countDesenv}</div></div>
+    <div class="stat-card"><div class="stat-label">Testes Internos</div><div class="stat-value">${countTestes}</div></div>
+    <div class="stat-card"><div class="stat-label">Go-To-Market: New Wave 1</div><div class="stat-value">${countWave1}</div></div>
+    <div class="stat-card"><div class="stat-label">Go-To-Market: New Wave 2</div><div class="stat-value">${countWave2}</div></div>
   `;
 }
 
-function dueToPos(due) {
-  if (!due) return 0;
-  const months = { abr: 0, mai: 1, jun: 2, jul: 3, ago: 4, set: 5, out: 6 };
-  const [day, monthStr] = due.toLowerCase().split(' ');
-  const month = months[monthStr] ?? 0;
-  return month + (parseInt(day) || 1) / 30;
+function toggleTimelineView() {
+  const toggleContainer = document.getElementById('timeline-toggle-switch');
+  
+  if (currentActiveView === 'timeline') {
+    currentActiveView = 'kpis';
+    toggleContainer.classList.add('kpi-active');
+    document.getElementById('lbl-view-timeline').classList.remove('active');
+    document.getElementById('lbl-view-kpis').classList.add('active');
+  } else {
+    currentActiveView = 'timeline';
+    toggleContainer.classList.remove('kpi-active');
+    document.getElementById('lbl-view-kpis').classList.remove('active');
+    document.getElementById('lbl-view-timeline').classList.add('active');
+  }
+  sortTimeline(currentTimelineSort);
+}
+
+// ATUALIZADO: RETIRADA DA COLUNA TARGET E INTEGRAÇÃO DOS AVATARES COMPLETOS DE SQUAD (OWNER, COOWNER, HRBP)
+function buildTimelineHTML(filtered) {
+  if (currentActiveView === 'timeline') {
+    const LABEL_WIDTH = 220; 
+    const TOTAL_MONTHS = 6;
+    const MONTH_WIDTH = 100; 
+    const TIMELINE_WIDTH = TOTAL_MONTHS * MONTH_WIDTH;
+    const MONTHS = ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'];
+    const TODAY_POS = 1.87;
+
+    const QUARTERS = [
+      { label: 'Q2', start: 0, end: 4, color: 'rgba(216, 216, 216, 0.1)' },
+      { label: 'Q3', start: 4, end: 7, color: 'rgba(216, 216, 216, 0.1)' },
+    ];
+
+    let html = `<div style="position: relative;">`;
+
+    html += `<div style="display: flex; gap: 16px; margin-bottom: 20px; padding: 10px 14px; background: rgba(10, 17, 41, 0.4); border: 1px solid var(--card-border); border-radius: var(--r-lg); backdrop-filter: blur(8px); flex-wrap: wrap; align-items: center;">
+      <div style="font-size: 10px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700;">Legenda das Etapas:</div>`;
+    Object.entries(CATEGORY_COLORS).forEach(([stageName, color]) => {
+      const borderColor = CATEGORY_BORDERS[stageName];
+      html += `<div style="display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-1); font-weight: 500;">
+        <div style="width: 10px; height: 10px; background: ${color}; border: 1px solid ${borderColor}; border-radius: 3px; box-shadow: 0 0 6px ${borderColor}60;"></div>
+        <span>${stageName}</span>
+      </div>`;
+    });
+    html += `</div>`;
+
+    html += `<div style="display: flex; align-items: center; margin-bottom: 2px;">
+      <div style="width: ${LABEL_WIDTH}px;"></div>
+      <div style="display: flex; width: ${TIMELINE_WIDTH}px; height: 18px; border-radius: 4px; overflow: hidden; border: 1px solid var(--card-border);">`;
+    QUARTERS.forEach(q => {
+      const width = (q.end - q.start) * MONTH_WIDTH;
+      html += `<div style="width: ${width}px; background: ${q.color}; display: flex; align-items: center; justify-content: center; color: var(--ink-2); font-weight: 700; font-size: 9px;">${q.label}</div>`;
+    });
+    html += `</div>
+      <div style="width: 120px; font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; text-align: left; padding-left: 14px;">Público Alvo</div>
+      <div style="width: 90px; font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; text-align: center;">Squad</div>
+    </div>`;
+
+    html += `<div style="display: flex; align-items: center; margin-bottom: 8px;">
+      <div style="width: ${LABEL_WIDTH}px;"></div>
+      <div style="display: flex; width: ${TIMELINE_WIDTH}px;">`;
+    MONTHS.forEach(month => {
+      html += `<div style="width: ${MONTH_WIDTH}px; text-align: center; font-size: 8px; color: var(--ink-3); font-weight: 600; padding: 1px 0;">${month}</div>`;
+    });
+    html += `</div><div style="width: 120px;"></div><div style="width: 90px;"></div></div>`;
+
+    const todayLeft = LABEL_WIDTH + TODAY_POS * MONTH_WIDTH;
+    html += `
+      <div style="position: absolute; left: ${todayLeft}px; top: 40px; bottom: 0; width: 1.5px; background: #00fff2; z-index: 5; box-shadow: 0 0 8px rgba(0,255,242,0.6);">
+        <div style="position: absolute; top: 24px; left: 50%; transform: translateX(-50%); background: #00fff2; color: #171e3d; padding: 1px 5px; border-radius: 2px; font-size: 8px; font-weight: 700; white-space: nowrap;">Hoje</div>
+      </div>
+    `;
+
+    filtered.forEach(p => {
+      // ATUALIZADO: SQUAD TRAZ TODOS RESPEITANDO A ORDEM OWNER -> COOWNER -> HRBP
+      const avOwner = generateTimelineAvatarHtml(p.owner, 20);
+      const avCoOwner = generateTimelineAvatarHtml(p.coOwner, 20);
+      const avHrbp = generateTimelineAvatarHtml(p.hrbp, 20);
+      const avatarWrapperHtml = `<div style="display: flex; gap: 3px; align-items: center; justify-content: center; width: 90px;">${avOwner}${avCoOwner}${avHrbp}</div>`;
+
+      html += `<div style="display: flex; border-bottom: 1px solid rgba(120, 180, 255, 0.05); padding: 10px 0; align-items: center;">
+        <div style="width: ${LABEL_WIDTH}px; padding-right: 8px; font-size: 10px; font-weight: 500; color: var(--ink-2); display: flex; align-items: center; gap: 8px;">
+          ${p.iface ? `<img src="${p.iface}" alt="" style="width: 22px; height: 22px; border-radius: 5px; object-fit: contain; background: rgba(255,255,255,0.05); padding: 2px; flex-shrink: 0;" />` : `<div style="width: 22px; height: 22px; flex-shrink:0;"></div>`}
+          <span style="font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;" title="${p.name}">${p.name}</span>
+        </div>
+        <div style="position: relative; width: ${TIMELINE_WIDTH}px; height: 26px; background: rgba(255,255,255,0.01); border-radius: 4px; margin-left: 12px; display: flex; align-items: center;">`;
+
+      const stageEntries = Object.entries(p.stages || {});
+      stageEntries.forEach(([stageName, stageData]) => {
+        const startPos = dueToPos(stageData.startStr);
+        const endPos = dueToPos(stageData.endStr);
+        const leftPx = startPos * MONTH_WIDTH;
+        const widthPx = (endPos - startPos) * MONTH_WIDTH;
+
+        if (widthPx > 0) {
+          const catColor = CATEGORY_COLORS[stageName] || 'rgba(75, 163, 255, 0.55)';
+          const borderColor = CATEGORY_BORDERS[stageName] || 'var(--neon-blue)';
+          const textColor = CATEGORY_TEXT[stageName] || '#ffffff';
+
+          html += `
+            <div style="position: absolute; left: ${leftPx}px; width: ${widthPx}px; height: 20px; top: 3px; background: ${catColor}; border: 1px solid ${borderColor}; backdrop-filter: blur(4px); border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding: 0 6px; color: ${textColor}; font-size: 8px; font-weight: 700; box-shadow: 0 0 8px ${borderColor}40, inset 0 0 6px rgba(255,255,255,0.1); cursor: pointer; overflow: hidden;" onclick="openTimelineEditModal('${p.id}', '${stageName}')"></div>
+            <div style="position: absolute; left: ${leftPx}px; top: 25px; font-size: 7px; color: var(--ink-4); white-space: nowrap; font-weight: 500;">${stageData.startStr}</div>
+            <div style="position: absolute; left: ${leftPx + widthPx}px; top: 25px; transform: translateX(-100%); font-size: 7px; color: var(--ink-4); white-space: nowrap; font-weight: 500;">${stageData.endStr}</div>
+          `;
+        }
+      });
+
+      html += `</div>
+        <div style="width: 120px; padding-left: 14px; font-size: 10px; font-weight: 600; color: var(--ink-3); line-height: 1.2; white-space: normal; word-break: break-word;">${p.impacted || 'Não informado'}</div>
+        ${avatarWrapperHtml}
+      </div>`;
+    });
+    html += `</div>`;
+    return html;
+
+  } else {
+    // ==========================================
+    // CONFIGURAÇÃO MODO KPIS (SEM COLUNA TARGET)
+    // ==========================================
+    const PROJ_WIDTH = 150;
+    const METRIC_WIDTH = 220; 
+    const VAL_WIDTH = 65;
+    const KPI_COLS = ['Baseline', 'Mai', 'Jun', 'Jul', 'Ago', 'Set']; // ATUALIZADO: Removido 'Target' das colunas
+    const TOTAL_VALS_WIDTH = KPI_COLS.length * VAL_WIDTH;
+
+    let html = `<div style="position: relative;">`;
+    html += `<div style="margin-top: 15px;"></div>`;
+    html += `<div style="display: flex; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--card-border); padding-bottom: 6px;">
+      <div style="width: ${PROJ_WIDTH}px; font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em;">Projeto</div>
+      <div style="width: ${METRIC_WIDTH}px; font-size: 9px; font-weight: 700; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 0.08em; padding-left: 10px;">Métrica</div>
+      <div style="display: flex; width: ${TOTAL_VALS_WIDTH}px;">`;
+    KPI_COLS.forEach(col => {
+      html += `<div style="width: ${VAL_WIDTH}px; text-align: center; font-size: 9px; color: var(--neon-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">${col}</div>`;
+    });
+    html += `</div>
+      <div style="width: 100px; font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; padding-left: 14px;">Público Alvo</div>
+      <div style="width: 90px; font-size: 9px; font-weight: 700; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; text-align: center;">Squad</div>
+    </div>`;
+
+    filtered.forEach(p => {
+      const metricList = p.metrics || [{ name: 'Sem métricas associadas', baseline: '-', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }];
+      const avOwner = generateTimelineAvatarHtml(p.owner, 20);
+      const avCoOwner = generateTimelineAvatarHtml(p.coOwner, 20);
+      const avHrbp = generateTimelineAvatarHtml(p.hrbp, 20);
+      const avatarWrapperHtml = `<div style="display: flex; gap: 3px; align-items: center; justify-content: center; width: 90px;">${avOwner}${avCoOwner}${avHrbp}</div>`;
+
+      metricList.forEach((m, idx) => {
+        html += `<div style="display: flex; border-bottom: 1px solid rgba(120, 180, 255, 0.05); padding: 8px 0; align-items: center; min-height: 38px;">`;
+        
+        if (idx === 0) {
+          html += `<div style="width: ${PROJ_WIDTH}px; padding-right: 8px; font-size: 10px; font-weight: 700; color: var(--ink-1); display: flex; align-items: center; gap: 6px;">
+            ${p.iface ? `<img src="${p.iface}" alt="" style="width: 18px; height: 18px; border-radius: 4px; object-fit: contain; background: rgba(255,255,255,0.05); padding: 1px;" />` : ''}
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.name}">${p.name}</span>
+          </div>`;
+        } else {
+          html += `<div style="width: ${PROJ_WIDTH}px;"></div>`;
+        }
+
+        html += `<div style="width: ${METRIC_WIDTH}px; font-size: 10px; font-weight: 500; color: var(--ink-2); padding-left: 10px; padding-right: 10px; white-space: normal; word-break: break-word; line-height: 1.3; display: flex; align-items: center; gap: 6px;">
+          <span>${m.name}</span>${m.info ? `<span style="font-size: 10px; color: var(--neon-blue); cursor: help;" title="${m.info}">&#9432;</span>` : ''}
+        </div>`;
+
+        html += `<div style="display: flex; width: ${TOTAL_VALS_WIDTH}px;">`;
+        const keys = ['baseline', 'mai', 'jun', 'jul', 'ago', 'set']; // ATUALIZADO: Chave 'target' expurgada do loop
+        keys.forEach(k => {
+          const val = m[k] || '-';
+          const isFilled = val !== '-';
+          let txtColor = 'var(--ink-1)';
+          if (k === 'baseline') txtColor = 'var(--ink-3)';
+          if (!isFilled) txtColor = 'var(--ink-4)';
+
+          html += `<div style="width: ${VAL_WIDTH}px; text-align: center; font-size: 10px; font-weight: 600; color: ${txtColor};">${val}</div>`;
+        });
+        html += `</div>`;
+
+        if (idx === 0) {
+          html += `
+            <div style="width: 100px; padding-left: 14px; font-size: 10px; font-weight: 600; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.impacted || 'Não informado'}">${p.impacted || 'Não informado'}</div>
+            ${avatarWrapperHtml}
+          `;
+        } else {
+          html += `<div style="width: 100px;"></div><div style="width: 90px;"></div>`;
+        }
+
+        html += `</div>`;
+      });
+    });
+    html += `</div>`;
+    return html;
+  }
 }
 
 function renderTimeline(filtered = PROJECTS) {
-  const container = document.getElementById('timeline-container-inner');
-  const TOTAL_MONTHS = 6;
-  const MONTH_WIDTH = 75;
-  const TIMELINE_WIDTH = TOTAL_MONTHS * MONTH_WIDTH;
-  const LABEL_WIDTH = 220;
-  const MONTHS = ['Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'];
-  const TODAY_POS = 1.87;
-
-  const QUARTERS = [
-    { label: 'Q2', start: 0, end: 3, color: 'linear-gradient(90deg, #008fff, #00fff2)' },
-    { label: 'Q3', start: 3, end: 6, color: 'linear-gradient(90deg, #00fff2, #b4ff3c)' },
-  ];
-
-  const sorted = [...filtered].sort((a, b) => a.start - b.start);
-
-  let html = `<div style="position: relative;">`;
-
-  html += `<div style="display: flex; gap: 12px; margin-bottom: 10px; padding: 8px 10px; background: rgba(6, 13, 36, 0.4); border: 1px solid var(--card-border); border-radius: 6px; flex-wrap: wrap;">
-    <div style="font-size: 9px; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; align-self: center;">Etapas:</div>`;
-  Object.entries(CATEGORY_COLORS).forEach(([cat, color]) => {
-    html += `<div style="display: flex; align-items: center; gap: 5px; font-size: 9px; color: var(--ink-2); font-weight: 600;">
-      <div style="width: 12px; height: 12px; background: ${color}; border-radius: 2px;"></div>${cat}
-    </div>`;
-  });
-  html += `</div>`;
-
-  html += `<div style="display: flex; align-items: center; margin-bottom: 2px;">
-    <div style="width: ${LABEL_WIDTH}px;"></div>
-    <div style="display: flex; width: ${TIMELINE_WIDTH}px; height: 18px; border-radius: 4px; overflow: hidden;">`;
-  QUARTERS.forEach(q => {
-    const width = (q.end - q.start) * MONTH_WIDTH;
-    html += `<div style="width: ${width}px; background: ${q.color}; display: flex; align-items: center; justify-content: center; color: #171e3d; font-weight: 700; font-size: 9px;">${q.label}</div>`;
-  });
-  html += `</div></div>`;
-
-  html += `<div style="display: flex; align-items: center; margin-bottom: 8px;">
-    <div style="width: ${LABEL_WIDTH}px;"></div>
-    <div style="display: flex; width: ${TIMELINE_WIDTH}px;">`;
-  MONTHS.forEach(month => {
-    html += `<div style="width: ${MONTH_WIDTH}px; text-align: center; font-size: 8px; color: var(--ink-3); font-weight: 600; padding: 1px 0;">${month}</div>`;
-  });
-  html += `</div></div>`;
-
-  const todayLeft = LABEL_WIDTH + TODAY_POS * MONTH_WIDTH;
-  html += `
-    <div style="position: absolute; left: ${todayLeft}px; top: 0; bottom: 0; width: 1.5px; background: #00fff2; z-index: 5; box-shadow: 0 0 8px rgba(0,255,242,0.6);">
-      <div style="position: absolute; top: 24px; left: 50%; transform: translateX(-50%); background: #00fff2; color: #171e3d; padding: 1px 5px; border-radius: 2px; font-size: 8px; font-weight: 700; white-space: nowrap;">Hoje</div>
-    </div>
-  `;
-
-  sorted.forEach(p => {
-    const catColor = CATEGORY_COLORS[p.category];
-    const textColor = CATEGORY_TEXT[p.category] || '#171e3d';
-    const left = p.start * MONTH_WIDTH;
-    const width = Math.max((p.end - p.start) * MONTH_WIDTH, 80);
-
-    const stack = [p.owner, p.coOwner, p.hrbp].filter(Boolean).map((person, i) => {
-      const photoStyle = person.photo
-        ? `background-image: url('${person.photo}'); background-size: cover; background-position: center;`
-        : `background: ${person.color}; color: #171e3d; display: flex; align-items: center; justify-content: center; font-size: 6px; font-weight: 700;`;
-      const initials = person.photo ? '' : person.initials;
-      return `<div style="width: 16px; height: 16px; border-radius: 50%; ${photoStyle} border: 1.5px solid var(--bg-1); margin-left: ${i === 0 ? 0 : -5}px; flex-shrink: 0;" title="${person.name}">${initials}</div>`;
-    }).join('');
-
-    const chipBg = textColor === '#ffffff' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(23, 30, 61, 0.25)';
-
-    html += `
-      <div style="display: flex; align-items: center; margin-bottom: 14px;">
-        <div style="width: ${LABEL_WIDTH}px; padding-right: 8px; font-size: 10px; font-weight: 500; color: var(--ink-2); display: flex; align-items: center; gap: 6px;" title="${p.name}">
-          <img src="${p.iface}" style="width: 22px; height: 22px; border-radius: 5px; flex-shrink: 0; object-fit: contain;" alt="" />
-          <span>${p.name}</span>
-        </div>
-        <div style="position: relative; width: ${TIMELINE_WIDTH}px; height: 30px;">
-          <div style="position: absolute; left: ${left}px; width: ${width}px; height: 22px; top: 0; background: ${catColor}; border-radius: 4px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px 0 3px; color: ${textColor}; font-size: 9px; font-weight: 700; box-shadow: 0 1px 5px ${catColor}50; overflow: hidden; cursor: pointer; transition: all 0.2s ease;" onmouseover="this.style.opacity='0.8';" onmouseout="this.style.opacity='1';" onclick="openTimelineEditModal('${p.id}')">
-            <div style="display: flex; align-items: center; flex-shrink: 0;">${stack}</div>
-            <span style="background: ${chipBg}; padding: 0 4px; border-radius: 2px; font-size: 8px; font-weight: 700; flex-shrink: 0;">${p.progress}%</span>
-          </div>
-          <div style="position: absolute; left: ${left}px; top: 23px; font-size: 7px; color: var(--ink-3); white-space: nowrap; font-weight: 500;">${p.startStr}</div>
-          <div style="position: absolute; left: ${left + width}px; top: 23px; transform: translateX(-100%); font-size: 7px; color: var(--ink-3); white-space: nowrap; font-weight: 500;">${p.endStr}</div>
-        </div>
-      </div>
-    `;
-  });
-
-  html += `</div>`;
-  container.innerHTML = html;
+  document.getElementById('timeline-container-inner').innerHTML = buildTimelineHTML(filtered);
 }
-
-let timelineStageFilter = '';
-function applyTimelineFilters() {
-  timelineStageFilter = document.getElementById('timeline-filter-stage').value;
-  let filtered = PROJECTS.filter(p => !timelineStageFilter || p.category === timelineStageFilter);
-  filtered.sort((a, b) => a.start - b.start);
-  renderTimeline(filtered);
-}
-function sortTimeline() { applyTimelineFilters(); }
 
 function renderBacklog() {
   const list = document.getElementById('backlog-list');
@@ -1064,50 +1303,14 @@ function renderBacklog() {
       <div style="flex: 1;">
         <div class="backlog-title">${t.name}</div>
         <div class="backlog-project">${t.project}</div>
-        ${t.description ? `<div style="font-size: 11px; color: var(--ink-3); margin-top: 4px;">${t.description}</div>` : ''}
       </div>
       <div style="display: flex; gap: 8px; align-items: center;">
         <span class="status-badge status-${t.status}">${t.status === 'todo' ? 'A Fazer' : t.status === 'in-progress' ? 'Em Progresso' : 'Concluído'}</span>
         <span class="priority-badge priority-${t.priority}">${t.priority === 'high' ? 'Alta' : t.priority === 'medium' ? 'Média' : 'Baixa'}</span>
-        <button class="action-btn" onclick="deleteBacklogItem('${t.id}')" title="Deletar" style="width: 26px; height: 26px; padding: 0; display: flex; align-items: center; justify-content: center;">🗑</button>
+        <button class="action-btn" onclick="deleteBacklogItem('${t.id}')" title="Deletar">🗑</button>
       </div>
     </div>
   `).join('');
-}
-
-function renderReports() {
-  const statusCounts = {};
-  PROJECTS.forEach(p => { statusCounts[p.status] = (statusCounts[p.status] || 0) + 1; });
-  const categoryCounts = {};
-  PROJECTS.forEach(p => { categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1; });
-
-  document.getElementById('reports-grid').innerHTML = `
-    <div class="card">
-      <div class="stat-label" style="margin-bottom: 16px;">Por Status</div>
-      ${Object.entries(statusCounts).map(([status, count]) => `
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--card-border);">
-          <span style="color: var(--ink-2); font-size: 13px;">${STATUS_LABEL[status]}</span>
-          <span style="font-weight: 700; color: var(--neon-cyan);">${count}</span>
-        </div>
-      `).join('')}
-    </div>
-    <div class="card">
-      <div class="stat-label" style="margin-bottom: 16px;">Por Categoria</div>
-      ${Object.entries(categoryCounts).map(([cat, count]) => `
-        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--card-border);">
-          <span style="display: flex; align-items: center; gap: 8px; color: var(--ink-2); font-size: 13px;">
-            <div style="width: 8px; height: 8px; background: ${CATEGORY_COLORS[cat]}; border-radius: 2px;"></div>${cat}
-          </span>
-          <span style="font-weight: 700; color: ${CATEGORY_COLORS[cat]};">${count}</span>
-        </div>
-      `).join('')}
-    </div>
-    <div class="card">
-      <div class="stat-label" style="margin-bottom: 16px;">Geral</div>
-      <div style="font-size: 32px; font-weight: 700; color: var(--neon-cyan); margin-bottom: 4px;">${Math.round(PROJECTS.reduce((s,p) => s + p.progress, 0) / PROJECTS.length)}%</div>
-      <div style="font-size: 12px; color: var(--ink-3);">progresso médio · ${PROJECTS.length} projetos</div>
-    </div>
-  `;
 }
 
 function openNewProjectModal() {
@@ -1132,122 +1335,77 @@ function openEditModal(id) {
   document.getElementById('project-modal').classList.add('active');
 }
 
-function closeModal() {
-  document.getElementById('project-modal').classList.remove('active');
-  editingId = null;
-}
+function closeModal() { document.getElementById('project-modal').classList.remove('active'); }
 
-function viewInterface(id) {
-  const project = PROJECTS.find(p => p.id === id);
-  if (!project || !project.iface) {
-    alert('Interface não disponível para este projeto');
-    return;
-  }
-  document.getElementById('interface-title').textContent = project.name;
-  document.getElementById('interface-image').src = project.iface;
-  document.getElementById('interface-modal').classList.add('active');
-}
-
-function closeInterfaceModal() {
-  document.getElementById('interface-modal').classList.remove('active');
-}
-
-let editingProjectId = null;
-
-function openTimelineEditModal(id) {
+function openTimelineEditModal(id, initialStage = 'Desenvolvimento') {
   editingProjectId = id;
   const project = PROJECTS.find(p => p.id === id);
   if (!project) return;
   
-  document.getElementById('timeline-edit-title').textContent = `Editar Cronograma - ${project.name}`;
   document.getElementById('timeline-project-info').textContent = `Projeto: ${project.name}`;
-  document.getElementById('timeline-start').value = project.startStr;
-  document.getElementById('timeline-end').value = project.endStr;
-  document.getElementById('timeline-progress').value = project.progress;
+  document.getElementById('timeline-stage-select').value = initialStage;
+  
+  loadStageDatesData(); 
   document.getElementById('timeline-edit-modal').classList.add('active');
 }
 
-function closeTimelineEditModal() {
+function loadStageDatesData() {
+  const project = PROJECTS.find(p => p.id === editingProjectId);
+  if (!project) return;
+  
+  const selectedStage = document.getElementById('timeline-stage-select').value;
+  
+  if (project.stages && project.stages[selectedStage]) {
+    document.getElementById('timeline-start').value = project.stages[selectedStage].startStr;
+    document.getElementById('timeline-end').value = project.stages[selectedStage].endStr;
+    document.getElementById('timeline-progress').value = project.stages[selectedStage].progress;
+  } else {
+    document.getElementById('timeline-start').value = '';
+    document.getElementById('timeline-end').value = '';
+    document.getElementById('timeline-progress').value = '0';
+  }
+}
+
+const closeTimelineEditModal = () => {
   document.getElementById('timeline-edit-modal').classList.remove('active');
   editingProjectId = null;
-}
-
-function openNewBacklogModal() {
-  document.getElementById('backlog-form').reset();
-  document.getElementById('backlog-modal-title').textContent = 'Novo Item do Backlog';
-  document.getElementById('backlog-modal').classList.add('active');
-}
-
-function closeBacklogModal() {
-  document.getElementById('backlog-modal').classList.remove('active');
-}
-
-function deleteBacklogItem(id) {
-  if (!confirm('Deletar este item do backlog?')) return;
-  BACKLOG = BACKLOG.filter(item => item.id !== id);
-  renderBacklog();
-}
-
-function deleteProject(id) {
-  if (!confirm('Deletar este projeto?')) return;
-  PROJECTS = PROJECTS.filter(p => p.id !== id);
-  applyFilters();
-  renderStats();
-  renderReports();
 }
 
 document.getElementById('project-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const ownerId = document.getElementById('form-owner').value;
   const owner = Object.values(TEAM).find(t => t.id === ownerId);
+  const cat = document.getElementById('form-category').value;
+  const prog = parseInt(document.getElementById('form-progress').value);
+  const due = document.getElementById('form-due').value;
+
   if (editingId) {
     const p = PROJECTS.find(p => p.id === editingId);
     p.name = document.getElementById('form-name').value;
     p.sub = document.getElementById('form-sub').value;
     p.status = document.getElementById('form-status').value;
-    p.category = document.getElementById('form-category').value;
-    p.progress = parseInt(document.getElementById('form-progress').value);
-    p.owner = owner;
-    p.due = document.getElementById('form-due').value;
+    p.category = cat; p.progress = prog; p.due = due; p.owner = owner;
+    if(!p.stages) p.stages = {};
+    if(p.stages[cat]) {
+      p.stages[cat].progress = prog;
+      p.stages[cat].endStr = due;
+    } else {
+      p.stages[cat] = { startStr: '10 abr', endStr: due, progress: prog };
+    }
   } else {
-    PROJECTS.push({
+    const newProj = {
       id: 'p' + Date.now(),
       name: document.getElementById('form-name').value,
       sub: document.getElementById('form-sub').value,
-      icon: '📌',
-      status: document.getElementById('form-status').value,
-      category: document.getElementById('form-category').value,
-      progress: parseInt(document.getElementById('form-progress').value),
-      owner: owner,
-      due: document.getElementById('form-due').value,
-      start: 0, end: 1,
-    });
+      icon: '📌', status: document.getElementById('form-status').value,
+      category: cat, progress: prog, owner: owner, due: due, stages: {}, metrics: [{ name: 'Nova Métrica', baseline: '-', mai: '-', jun: '-', jul: '-', ago: '-', set: '-' }]
+    };
+    newProj.stages[cat] = { startStr: '10 abr', endStr: due, progress: prog };
+    PROJECTS.push(newProj);
   }
   closeModal();
-  applyFilters();
+  applyDashboardFilters();
   renderStats();
-  renderReports();
-});
-
-document.getElementById('backlog-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const name = document.getElementById('backlog-name').value;
-  const project = document.getElementById('backlog-project').value;
-  const desc = document.getElementById('backlog-desc').value;
-  const priority = document.getElementById('backlog-priority').value;
-  const status = document.getElementById('backlog-status').value;
-  
-  BACKLOG.push({
-    id: 'b' + Date.now(),
-    name: name,
-    project: project,
-    description: desc,
-    priority: priority,
-    status: status,
-  });
-  
-  closeBacklogModal();
-  renderBacklog();
 });
 
 document.getElementById('timeline-edit-form').addEventListener('submit', (e) => {
@@ -1255,94 +1413,156 @@ document.getElementById('timeline-edit-form').addEventListener('submit', (e) => 
   const project = PROJECTS.find(p => p.id === editingProjectId);
   if (!project) return;
   
+  const selectedStage = document.getElementById('timeline-stage-select').value;
   const startStr = document.getElementById('timeline-start').value;
   const endStr = document.getElementById('timeline-end').value;
   const progress = parseInt(document.getElementById('timeline-progress').value);
   
-  project.startStr = startStr;
-  project.endStr = endStr;
-  project.start = dueToPos(startStr);
-  project.end = dueToPos(endStr);
-  project.progress = progress;
-  project.due = endStr;
+  if (!project.stages) project.stages = {};
+  
+  project.stages[selectedStage] = {
+    startStr: startStr,
+    endStr: endStr,
+    progress: progress
+  };
+
+  if (project.category === selectedStage) {
+    project.progress = progress;
+    project.due = endStr;
+  }
   
   closeTimelineEditModal();
-  applyFilters();
+  applyDashboardFilters();
   renderStats();
-  renderReports();
 });
 
-function applyFilters() {
-  const stageFilter = document.getElementById('filter-status').value;
-  const dateSort = document.getElementById('filter-date').value;
-  let filtered = PROJECTS.filter(p => !stageFilter || p.category === stageFilter);
-  if (dateSort === 'start-asc') filtered.sort((a, b) => a.start - b.start);
-  else if (dateSort === 'start-desc') filtered.sort((a, b) => b.start - a.start);
-  else if (dateSort === 'end-asc') filtered.sort((a, b) => a.end - b.end);
-  else if (dateSort === 'end-desc') filtered.sort((a, b) => b.end - a.end);
-  renderProjects(filtered);
-  renderTimeline(filtered);
+function deleteBacklogItem(id) {
+  if (!confirm('Deletar este item do backlog?')) return;
+  BACKLOG = BACKLOG.filter(item => item.id !== id);
+  renderBacklog();
 }
 
-function exportCSV() {
-  const headers = ['Projeto', 'Categoria', 'Status', 'Progresso', 'Owner', 'Prazo'];
-  const rows = PROJECTS.map(p => [p.name, p.category, STATUS_LABEL[p.status], `${p.progress}%`, p.owner.name, p.due]);
-  let csv = headers.join(',') + '\n';
-  rows.forEach(row => csv += row.map(c => `"${c}"`).join(',') + '\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `CoE_Projetos_${new Date().toISOString().split('T')[0]}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+document.getElementById('backlog-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  BACKLOG.push({
+    id: 'b' + Date.now(),
+    name: document.getElementById('backlog-name').value,
+    project: document.getElementById('backlog-project').value,
+    description: document.getElementById('backlog-desc').value,
+    priority: document.getElementById('backlog-priority').value,
+    status: document.getElementById('backlog-status').value,
+  });
+  closeBacklogModal();
+  renderBacklog();
+});
+
+function getFilteredProjects() {
+  const stageFilter = document.getElementById('filter-status').value;
+  return PROJECTS.filter(p => !stageFilter || p.category === stageFilter);
+}
+
+function applyDashboardFilters() {
+  const dateSort = document.getElementById('filter-date').value;
+  let filtered = getFilteredProjects();
+  
+  if (dateSort === 'start-asc') {
+    filtered.sort((a, b) => dueToPos(a.stages[a.category]?.startStr || '') - dueToPos(b.stages[b.category]?.startStr || ''));
+  } else if (dateSort === 'start-desc') {
+    filtered.sort((a, b) => dueToPos(b.stages[b.category]?.startStr || '') - dueToPos(a.stages[a.category]?.startStr || ''));
+  } else if (dateSort === 'end-asc') {
+    filtered.sort((a, b) => dueToPos(a.due) - dueToPos(b.due));
+  } else if (dateSort === 'end-desc') {
+    filtered.sort((a, b) => dueToPos(b.due) - dueToPos(a.due));
+  } else if (dateSort === 'interface-asc') {
+    filtered.sort((a, b) => {
+      const compIface = (a.iface || '').localeCompare(b.iface || '');
+      if (compIface !== 0) return compIface;
+      return (a.owner?.name || '').localeCompare(b.owner?.name || '');
+    });
+  } else if (dateSort === 'owner-asc') {
+    filtered.sort((a, b) => {
+      const compOwner = (a.owner?.name || '').localeCompare(b.owner?.name || '');
+      if (compOwner !== 0) return compOwner;
+      return (a.iface || '').localeCompare(b.iface || '');
+    });
+  }
+  
+  renderProjects(filtered);
+}
+
+let currentTimelineSort = 'start'; 
+function sortTimeline(type) {
+  currentTimelineSort = type;
+  
+  document.querySelectorAll('#tab-timeline .timeline-sort-btn').forEach(btn => btn.classList.remove('active'));
+  if (type === 'start') document.getElementById('sort-timeline-start').classList.add('active');
+  if (type === 'owner') document.getElementById('sort-timeline-owner').classList.add('active');
+  if (type === 'infra') document.getElementById('sort-timeline-infra').classList.add('active');
+  if (type === 'impact') document.getElementById('sort-timeline-impact').classList.add('active');
+  
+  let filtered = [...getFilteredProjects()];
+  
+  if (type === 'start') {
+    // ATUALIZADO: FILTRADO E ORDENADO CRESCENTE PELA DATA DOS TESTES INTERNOS (SÓ SE A ETAPA EXISTIR)
+    filtered.sort((a, b) => {
+      const dateA = a.stages['Testes Internos']?.startStr || '30 set';
+      const dateB = b.stages['Testes Internos']?.startStr || '30 set';
+      return dueToPos(dateA) - dueToPos(dateB);
+    });
+  } else if (type === 'owner') {
+    filtered.sort((a, b) => {
+      const compOwner = (a.owner?.name || '').localeCompare(b.owner?.name || '');
+      if (compOwner !== 0) return compOwner;
+      return (a.iface || '').localeCompare(b.iface || '');
+    });
+  } else if (type === 'infra') {
+    filtered.sort((a, b) => {
+      const compIface = (a.iface || '').localeCompare(b.iface || '');
+      if (compIface !== 0) return compIface;
+      return (a.owner?.name || '').localeCompare(b.owner?.name || '');
+    });
+  } else if (type === 'impact') {
+    filtered.sort((a, b) => {
+      const compImpact = (a.impacted || '').localeCompare(b.impacted || '');
+      if (compImpact !== 0) return compImpact;
+      return (a.name || '').localeCompare(b.name || '');
+    });
+  }
+  
+  renderTimeline(filtered);
 }
 
 document.querySelectorAll('.sidebar-item').forEach(item => {
   item.addEventListener('click', () => {
     const tabName = item.dataset.tab;
-    const tabMap = { projetos: 'tab-projetos', timeline: 'tab-timeline', backlog: 'tab-backlog' };
-    const titleMap = { projetos: 'Dashboard', timeline: 'Timeline', backlog: 'Backlog' };
     document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-    document.getElementById(tabMap[tabName]).style.display = 'block';
+    
+    document.getElementById({ projetos: 'tab-projetos', timeline: 'tab-timeline', backlog: 'tab-backlog' }[tabName]).style.display = 'block';
     item.classList.add('active');
-    document.getElementById('page-title').textContent = titleMap[tabName];
+    document.getElementById('page-title').textContent = { projetos: 'Dashboard', timeline: 'Timeline', backlog: 'Backlog' }[tabName];
+    
+    if (tabName === 'timeline') sortTimeline(currentTimelineSort);
+    if (tabName === 'projetos') applyDashboardFilters();
   });
 });
 
 Object.values(TEAM).forEach(owner => {
-  const o2 = document.createElement('option');
-  o2.value = owner.id; o2.textContent = owner.name;
+  const o2 = document.createElement('option'); o2.value = owner.id; o2.textContent = owner.name;
   document.getElementById('form-owner').appendChild(o2);
 });
 
 PROJECTS.forEach(project => {
-  const option = document.createElement('option');
-  option.value = project.name;
-  option.textContent = project.name;
+  const option = document.createElement('option'); option.value = project.name; option.textContent = project.name;
   document.getElementById('backlog-project').appendChild(option);
 });
 
-document.getElementById('filter-date').addEventListener('change', applyFilters);
-document.getElementById('filter-status').addEventListener('change', applyFilters);
-document.getElementById('timeline-filter-stage').addEventListener('change', applyTimelineFilters);
-document.addEventListener('keydown', (e) => { 
-  if (e.key === 'Escape') {
-    closeModal();
-    closeBacklogModal();
-    closeInterfaceModal();
-    closeTimelineEditModal();
-  }
-});
-
-renderProjects();
+applyDashboardFilters();
 renderStats();
-renderTimeline();
+sortTimeline(currentTimelineSort);
 renderBacklog();
-renderReports();
 </script>
 </body>
 </html>
+
+```
